@@ -80,7 +80,7 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
     vector<pair<string,vector<float>>> data = ts.getData();
     int sizeData = data.size();
     for(int i = 0 ; i < sizeData ; ++i) {
-        getCorrelated(i , data , sizeData);
+        correlatedFeatures* cf = getCorrelated(i , data , sizeData);
+        this->correlation.push_back(*cf);
     }
-
 }
