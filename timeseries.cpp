@@ -24,36 +24,25 @@ timeseries::timeseries(const string file) {
 }
 void timeseries::addFeature(string line) {
     int start = 0, end = line.find(',');
-    while (true) {
+    do {
         string feature = line.substr(start, end - start);
         start = end + 1;
-        end = line.find(',', start);
-        pair<string,vector<float>> p;
+        end = (end == -1) ? line.find('\n', start) : line.find(',', start);
+        pair<string, vector<float>> p;
         p.first = feature;
         this->data.push_back(p);
-        if (end == -1) {
-            feature = line.substr(start, line.find('\n', start));
-            p.first = feature;
-            this->data.push_back(p);
-            break;
-        }
-    }
+    } while (start != 0);
 }
 
 void timeseries::updateData(std::string values) {
     auto it = this->data.begin();
     int start = 0, end = values.find(',');
-    while (true) {
+    do {
         float value = stof(values.substr(start, end - start));
+        start = end + 1;
+        end = (end == -1) ? values.find('\n' , start) : values.find(',', start);
         it->second.push_back(value);
         ++it;
-        start = end + 1;
-        end = values.find(',', start);
-        if (end == -1) {
-            value = stof(values.substr(start, '\n'));
-            it->second.push_back(value);
-            break;
-        }
-    }
+    } while (start != 0);
 }
 
