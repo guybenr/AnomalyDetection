@@ -3,7 +3,6 @@
 //
 #include <vector>
 #include <fstream>
-#include <iostream>
 #include <string>
 
 using namespace std;
@@ -17,7 +16,7 @@ timeseries::timeseries(const string file) {
     while (true) {
         string values;
         getline(f, values);
-        if (values.size() == 0) {
+        if (values.empty()) {
             break;
         }
         updateData(values);
@@ -34,7 +33,6 @@ void timeseries::addFeature(string line) {
         this->data.push_back(p);
         if (end == -1) {
             feature = line.substr(start, line.find('\n', start));
-            pair<string,vector<float>> p;
             p.first = feature;
             this->data.push_back(p);
             break;
@@ -43,7 +41,7 @@ void timeseries::addFeature(string line) {
 }
 
 void timeseries::updateData(std::string values) {
-    vector<pair<string, vector<float>>>::iterator it = this->data.begin();
+    auto it = this->data.begin();
     int start = 0, end = values.find(',');
     while (true) {
         float value = stof(values.substr(start, end - start));
@@ -52,7 +50,7 @@ void timeseries::updateData(std::string values) {
         start = end + 1;
         end = values.find(',', start);
         if (end == -1) {
-            float value = stof(values.substr(start, '\n'));
+            value = stof(values.substr(start, '\n'));
             it->second.push_back(value);
             break;
         }
