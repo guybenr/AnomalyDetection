@@ -17,10 +17,6 @@ correlatedFeatures SimpleAnomalyDetector::createStruct(string current , string s
     return *clp;
 }
 
-
-
-
-
 Line linearReg(vector<float> feature1, vector<float> feature2, int featureSize) {
     Point **points = new Point*[featureSize];
     for (int i = 0; i < featureSize; ++i) {
@@ -34,8 +30,19 @@ Line linearReg(vector<float> feature1, vector<float> feature2, int featureSize) 
     return linearReg;
 }
 
-float SimpleAnomalyDetector::threshold() {
-
+float SimpleAnomalyDetector::threshold(vector<float> feature1, vector<float> feature2, int featureSize) {
+    Point **points = new Point*[featureSize];
+    for (int i = 0; i < featureSize; ++i) {
+        points[i] = new Point(feature1[i], feature2[i]);
+    }
+    float max = 0;
+    Line l = linearReg(feature1 , feature2 , featureSize);
+    for (int i = 0 ; i < featureSize ; ++i) {
+        if (dev(*points[i] , l) > 0) {
+            max = dev(*points[i] , l);
+        }
+    }
+    return max;
 }
 
 correlatedFeatures SimpleAnomalyDetector::getCorrelated(int current , vector<pair<string,vector<float>>>& data , int sizeData) {
