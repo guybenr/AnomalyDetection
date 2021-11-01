@@ -8,7 +8,7 @@
 using namespace std;
 
 #include "timeseries.h"
-timeseries::timeseries(const string& file) {
+TimeSeries::TimeSeries(const string& file) {
     fstream f(file);
     string line;
     getline(f, line);
@@ -22,7 +22,7 @@ timeseries::timeseries(const string& file) {
         updateData(values);
     }
 }
-void timeseries::addFeature(const string& line) {
+void TimeSeries::addFeature(const string& line) {
     int start = 0, end = line.find(',');
     do {
         string feature = line.substr(start, end - start);
@@ -34,7 +34,7 @@ void timeseries::addFeature(const string& line) {
     } while (start != 0);
 }
 
-void timeseries::updateData(const std::string& values) {
+void TimeSeries::updateData(const std::string& values) {
     auto it = this->data.begin();
     int start = 0, end = values.find(',');
     do {

@@ -7,9 +7,7 @@ using namespace std;
 
 // this is a simple test to put you on the right track
 int main(){
-    timeseries *t = new timeseries("C:\\Users\\adida\\CLionProjects\\TimeSeriesData\\addresses.csv");
-    int d = -1;
-    int p = (d == -1) ? 0 : 5;
+    TimeSeries *t = new TimeSeries("C:\\Users\\adida\\CLionProjects\\TimeSeriesData\\addresses.csv");
     return 0;
 }
 

@@ -6,10 +6,10 @@
 #define ANOMALY_DETECTION_UTIL_CPP_TIMESERIES_H
 
 
-class timeseries {
+class TimeSeries {
     std::vector <std::pair<std::string , std::vector<float>>> data{};
 public:
-    timeseries(const std::string& file);
+    TimeSeries(const std::string& file);
     void addFeature(const std::string& line);
     void updateData(const std::string& values);
 
