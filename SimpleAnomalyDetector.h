@@ -26,9 +26,10 @@ public:
     virtual void learnNormal(const TimeSeries& ts);
     virtual vector<AnomalyReport> detect(const TimeSeries& ts);
     vector<correlatedFeatures> getNormalModel();
-    correlatedFeatures getCorrelated(int current , vector<pair<string,vector<float>>>& data , int sizeData);
-    correlatedFeatures createStruct(string current , string second , Line l , float cor , float th);
-    float threshold(vector<float> feature1, vector<float> feature2, int featureSize);
+    correlatedFeatures* getCorrelated(int current , vector<pair<string,vector<float>>>& data , int sizeData);
+    float getThreshold(vector<float>& feature1, vector<float>& feature2, int featureSize);
+    Line linearReg(vector<float>& feature1, vector<float>& feature2, int featureSize);
+    Point** createFeaturesPoints(vector<float>& feature1, vector<float>& feature2, int featureSize);
 
     };
 
