@@ -5,13 +5,18 @@
 #ifndef ANOMALY_DETECTION_UTIL_CPP_TIMESERIES_H
 #define ANOMALY_DETECTION_UTIL_CPP_TIMESERIES_H
 
+#include <vector>
+#include <fstream>
+#include <string>
+
+using namespace std;
 
 class TimeSeries {
-    std::vector <std::pair<std::string , std::vector<float>>> data{};
+    vector <pair<string , vector<float>>> data{};
 public:
-    TimeSeries(const std::string& file);
-    void addFeature(const std::string& line);
-    void updateData(const std::string& values);
+    TimeSeries(const string& file);
+    void addFeature(const string& line);
+    void updateData(const string& values);
 
 };
 

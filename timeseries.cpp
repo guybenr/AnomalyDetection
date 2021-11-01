@@ -1,11 +1,6 @@
 //
 // Created by adida on 31/10/2021.
 //
-#include <vector>
-#include <fstream>
-#include <string>
-
-using namespace std;
 
 #include "timeseries.h"
 TimeSeries::TimeSeries(const string& file) {
