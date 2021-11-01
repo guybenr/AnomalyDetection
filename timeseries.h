@@ -9,9 +9,9 @@
 class timeseries {
     std::vector <std::pair<std::string , std::vector<float>>> data{};
 public:
-    timeseries(std::string file);
-    void addFeature(std::string line);
-    void updateData(std::string values);
+    timeseries(const std::string& file);
+    void addFeature(const std::string& line);
+    void updateData(const std::string& values);
 
 };
 
