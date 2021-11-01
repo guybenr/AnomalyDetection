@@ -17,7 +17,9 @@ public:
     TimeSeries(const string& file);
     void addFeature(const string& line);
     void updateData(const string& values);
-
+    vector<float>getFeatureValues(string feature);
+    vector<string> getFeatures () const;
+    vector<pair<string , vector<float>>> getData() const;
 };
 
 

@@ -17,6 +17,7 @@ TimeSeries::TimeSeries(const string& file) {
         updateData(values);
     }
 }
+
 void TimeSeries::addFeature(const string& line) {
     int start = 0, end = line.find(',');
     do {
@@ -41,3 +42,22 @@ void TimeSeries::updateData(const std::string& values) {
     } while (start != 0);
 }
 
+vector<string> TimeSeries::getFeatures() const {
+    vector<string> features;
+    for(auto it = this->data.begin(); it < this->data.end(); it++) {
+        features.push_back(it->first);
+    }
+    return features;
+}
+
+vector<float> TimeSeries::getFeatureValues(string feature) {
+    for(auto it = this->data.begin(); it < this->data.end(); it++) {
+        if(it->first == feature) {
+            return it->second;
+        }
+    }
+}
+
+vector<pair<string , vector<float>>> TimeSeries :: getData() const {
+    return this->data;
+}

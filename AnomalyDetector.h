@@ -5,12 +5,21 @@
 #ifndef ANOMALY_DETECTION_UTIL_CPP_ANOMALYDETECTOR_H
 #define ANOMALY_DETECTION_UTIL_CPP_ANOMALYDETECTOR_H
 
+#include <vector>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
 class TimeSeries {
     std::vector <std::pair<std::string , std::vector<float>>> data{};
 public:
     TimeSeries(const std::string& file);
     void addFeature(const std::string& line);
     void updateData(const std::string& values);
+    vector<float>getFeatureValues(string feature);
+    vector<string> getFeatures() const;
+    vector<pair<string , vector<float>>> getData() const;
 };
 class AnomalyReport{
 public:
