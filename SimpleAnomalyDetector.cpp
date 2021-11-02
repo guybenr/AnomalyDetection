@@ -87,3 +87,13 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
     }
 }
 
+correlatedFeatures* SimpleAnomalyDetector:: getCorrelatedTo(string feature) {
+    int correlationSize = this->correlation.size();
+    for (int i = 0; i < correlationSize; ++i) {
+        if (this->correlation[i].feature1 == feature) {
+            return &this->correlation[i];
+        }
+    }
+    return nullptr;
+}
+
