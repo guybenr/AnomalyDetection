@@ -9,6 +9,7 @@
 #include <fstream>
 #include <string>
 
+
 using namespace std;
 
 class TimeSeries {
@@ -17,7 +18,7 @@ public:
     TimeSeries(const std::string& file);
     void addFeature(const std::string& line);
     void updateData(const std::string& values);
-    vector<float>getFeatureValues(string feature);
+    vector<float>getFeatureValues(string feature) const;
     vector<string> getFeatures() const;
     vector<pair<string , vector<float>>> getData() const;
 };
@@ -32,7 +33,7 @@ class TimeSeriesAnomalyDetector {
 public:
     virtual void learnNormal(const TimeSeries& ts)=0;
     virtual vector<AnomalyReport> detect(const TimeSeries& ts)=0;
-    virtual ~TimeSeriesAnomalyDetector(){}
+    virtual ~TimeSeriesAnomalyDetector()= default;
 };
 
 #endif //ANOMALY_DETECTION_UTIL_CPP_ANOMALYDETECTOR_H

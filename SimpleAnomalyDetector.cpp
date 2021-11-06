@@ -4,9 +4,12 @@
 #include "SimpleAnomalyDetector.h"
 
 SimpleAnomalyDetector::SimpleAnomalyDetector() {
+    this->correlation = new vector<correlatedFeatures>;
+}
 
-};
-
+SimpleAnomalyDetector::~SimpleAnomalyDetector() {
+    delete this->correlation;
+}
 
 correlatedFeatures* createCorrelatedFeatures(string current , string second , Line l , float cor , float th) {
     correlatedFeatures *clp = new correlatedFeatures;
@@ -32,7 +35,7 @@ Line SimpleAnomalyDetector::linearReg(vector<float>& feature1, vector<float>& fe
     for (int i = 0; i < featureSize; ++i) {
         delete points[i];
     }
-    delete[] *points;
+    delete[] points;
     return linearReg;
 }
 
@@ -47,7 +50,7 @@ float SimpleAnomalyDetector::getThreshold(vector<float>& feature1, vector<float>
             delete points[i];
         }
     }
-    delete[] *points;
+    delete[] points;
     return max;
 }
 
@@ -83,17 +86,47 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
         correlatedFeatures* cf = getCorrelated(i , data , sizeData);
         if(cf == nullptr)
             continue;
-        this->correlation.push_back(*cf);
+        this->correlation->push_back(*cf);
     }
 }
 
 correlatedFeatures* SimpleAnomalyDetector:: getCorrelatedTo(string feature) {
-    int correlationSize = this->correlation.size();
+    int correlationSize = this->correlation->size();
     for (int i = 0; i < correlationSize; ++i) {
-        if (this->correlation[i].feature1 == feature) {
-            return &this->correlation[i];
+        if (this->correlation->at(i).feature1 == feature) {
+            return &this->correlation->at(i);
         }
     }
     return nullptr;
 }
+
+vector<AnomalyReport> SimpleAnomalyDetector:: detect(const TimeSeries& ts) {
+    vector<AnomalyReport> *reports = new vector<AnomalyReport>;
+    int correlationSize = this->correlation->size();
+    for (int i = 0 ; i < correlationSize ; ++i) {
+        correlatedFeatures cur = this->correlation->at(i);
+        string featureOne = cur.feature1;
+        string featureTwo = cur.feature2;
+        vector<float> valuesOne = ts.getFeatureValues(featureOne);
+        vector<float> valuesTwo = ts.getFeatureValues(featureTwo);
+        int sizeOfPoints = valuesOne.size();
+        Point **points = createFeaturesPoints(valuesOne,valuesTwo,sizeOfPoints);
+        for (int j = 0 ; j < sizeOfPoints ; ++j) {
+            if (dev(*points[j] , cur.lin_reg) > cur.threshold) {
+                AnomalyReport *report = new AnomalyReport(featureOne + "-" + featureTwo , j);
+                reports->push_back(*report);
+            }
+        }
+        return *reports;
+
+    }
+}
+
+vector<correlatedFeatures> SimpleAnomalyDetector:: getNormalModel() {
+    return *this->correlation;
+}
+
+
+
+
 

@@ -16,6 +16,7 @@ TimeSeries::TimeSeries(const string& file) {
         }
         updateData(values);
     }
+    f.close();
 }
 
 void TimeSeries::addFeature(const string& line) {
@@ -50,7 +51,7 @@ vector<string> TimeSeries::getFeatures() const {
     return features;
 }
 
-vector<float> TimeSeries::getFeatureValues(string feature) {
+vector<float> TimeSeries::getFeatureValues (string feature) const {
     for(auto it = this->data.begin(); it < this->data.end(); it++) {
         if(it->first == feature) {
             return it->second;

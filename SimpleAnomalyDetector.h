@@ -19,7 +19,7 @@ struct correlatedFeatures{
     float threshold;
 };
 class SimpleAnomalyDetector:public TimeSeriesAnomalyDetector{
-    vector <correlatedFeatures> correlation{};
+    vector <correlatedFeatures> *correlation{};
 public:
     SimpleAnomalyDetector();
     virtual ~SimpleAnomalyDetector();
@@ -33,7 +33,6 @@ private:
     float getThreshold(vector<float>& feature1, vector<float>& feature2, int featureSize);
     Line linearReg(vector<float>& feature1, vector<float>& feature2, int featureSize);
     Point** createFeaturesPoints(vector<float>& feature1, vector<float>& feature2, int featureSize);
-
     };
 
 #endif //ANOMALY_DETECTION_UTIL_CPP_SIMPLEANOMALYDETECTOR_H
