@@ -45,7 +45,7 @@ float SimpleAnomalyDetector::getThreshold(vector<float>& feature1, vector<float>
     Line l = linearReg(feature1 , feature2 , featureSize);
     for (int i = 0 ; i < featureSize ; ++i) {
         float distance = dev(*points[i] , l);
-        if (distance > 0) {
+        if (distance > max) {
             max = distance;
             delete points[i];
         }
@@ -55,7 +55,7 @@ float SimpleAnomalyDetector::getThreshold(vector<float>& feature1, vector<float>
 }
 
 correlatedFeatures* SimpleAnomalyDetector::getCorrelated(int current ,vector<pair<string,vector<float>>>& data , int sizeData) {
-    float max = 0;
+    float max = 0.9;
     int maxFeature = -1;
     int sizeValues = data[current].second.size();
     for(int i = current + 1 ; i < sizeData ; ++i) {
@@ -72,9 +72,9 @@ correlatedFeatures* SimpleAnomalyDetector::getCorrelated(int current ,vector<pai
     }
     pair<string, vector<float>>& feature1 = data[current];
     pair<string, vector<float>>& feature2 = data[maxFeature];
-    float thresshold = getThreshold(feature1.second, feature2.second, sizeValues);
+    float threshold = getThreshold(feature1.second, feature2.second, sizeValues);
     Line linearReg = this->linearReg(feature1.second, feature2.second, sizeValues);
-    correlatedFeatures* features = createCorrelatedFeatures(feature1.first, feature2.first, linearReg, max, thresshold);
+    correlatedFeatures* features = createCorrelatedFeatures(feature1.first, feature2.first, linearReg, max, threshold);
     return features;
 
 }
@@ -101,16 +101,15 @@ vector<AnomalyReport> SimpleAnomalyDetector:: detect(const TimeSeries& ts) {
         vector<float> valuesOne = ts.getFeatureValues(featureOne);
         vector<float> valuesTwo = ts.getFeatureValues(featureTwo);
         int sizeOfPoints = valuesOne.size();
-        Point **points = createFeaturesPoints(valuesOne,valuesTwo,sizeOfPoints);
-        for (int j = 0 ; j < sizeOfPoints ; ++j) {
-            if (dev(*points[j] , cur.lin_reg) > cur.threshold) {
-                AnomalyReport *report = new AnomalyReport(featureOne + "-" + featureTwo , j);
+        Point **points = createFeaturesPoints(valuesOne, valuesTwo, sizeOfPoints);
+        for (int j = 0; j < sizeOfPoints; ++j) {
+            if (dev(*points[j], cur.lin_reg) > (cur.threshold * 1.1)) {
+                AnomalyReport *report = new AnomalyReport(featureOne + "-" + featureTwo, j + 1);
                 reports->push_back(*report);
             }
         }
-        return *reports;
-
     }
+    return *reports;
 }
 
 vector<correlatedFeatures> SimpleAnomalyDetector:: getNormalModel() {
