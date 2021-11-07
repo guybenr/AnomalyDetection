@@ -40,7 +40,9 @@ private:
     correlatedFeatures* getCorrelated(int current , vector<pair<string,vector<float>>>& data , int sizeData);
     float getThreshold(vector<float>& feature1, vector<float>& feature2, int featureSize);
     Line linearReg(vector<float>& feature1, vector<float>& feature2, int featureSize);
-    Point** createFeaturesPoints(vector<float>& feature1, vector<float>& feature2, int featureSize);
+    Point** createFeaturesPoints(vector<float> feature1, vector<float> feature2, int featureSize);
+    void deletePoint(Point **points , int size);
+
     };
 
 
