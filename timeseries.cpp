@@ -3,34 +3,46 @@
 //
 
 #include "timeseries.h"
+
+//constructor
 TimeSeries::TimeSeries(const string& file) {
     fstream f(file);
     string line;
     getline(f, line);
-    addFeature(line);
+    addFeature(line); // adding features
     while (true) {
         string values;
         getline(f, values);
         if (values.empty()) {
             break;
         }
-        updateData(values);
+        updateData(values); // adding each line of values
     }
     f.close();
 }
 
+/*
+ * function initial all of the features
+ * param: const string& line - a new line with the features to add to the TimeSeries
+ * return none
+*/
 void TimeSeries::addFeature(const string& line) {
     int start = 0, end = line.find(',');
     do {
         string feature = line.substr(start, end - start);
         start = end + 1;
-        end = (end == -1) ? line.find('\n', start) : line.find(',', start);
+        end = (end == -1) ? line.find('\n', start) : line.find(',', start); // reads each feature
         pair<string, vector<float>> p;
         p.first = feature;
         this->data.push_back(p);
     } while (start != 0);
 }
 
+/*
+* function adds all of the features values in a single line to the time series
+* param: const string& line - a new line with the values to add to the TimeSeries
+* return none
+*/
 void TimeSeries::updateData(const std::string& values) {
     auto it = this->data.begin();
     int start = 0, end = values.find(',');
@@ -43,6 +55,11 @@ void TimeSeries::updateData(const std::string& values) {
     } while (start != 0);
 }
 
+/*
+* function returns a vector of all of the features
+* param: none
+* return vector<string> - all of the features
+*/
 vector<string> TimeSeries::getFeatures() const {
     vector<string> features;
     for(auto it = this->data.begin(); it < this->data.end(); it++) {
@@ -51,6 +68,11 @@ vector<string> TimeSeries::getFeatures() const {
     return features;
 }
 
+/*
+* function return a specified feature's values
+* param: string feature - the specified feature
+* return vector<float> - all of the feature's values
+*/
 vector<float> TimeSeries::getFeatureValues (string feature) const {
     for(auto it = this->data.begin(); it < this->data.end(); it++) {
         if(it->first == feature) {
@@ -59,6 +81,11 @@ vector<float> TimeSeries::getFeatureValues (string feature) const {
     }
 }
 
+/*
+ * function return the data
+ * param: none
+ * return const vector<pair<string , vector<float>>>& - the data of the timeseries
+ */
 vector<pair<string , vector<float>>> TimeSeries :: getData() const {
     return this->data;
 }

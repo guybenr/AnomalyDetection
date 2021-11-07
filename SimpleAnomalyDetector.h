@@ -21,8 +21,16 @@ struct correlatedFeatures{
 class SimpleAnomalyDetector:public TimeSeriesAnomalyDetector{
     vector <correlatedFeatures> *correlation{};
 public:
+    //constructor
     SimpleAnomalyDetector();
+    //destructor
     virtual ~SimpleAnomalyDetector();
+
+    /*
+     * function adds all of the timeseries's correlatedFeatures to the correlation member
+     * param: const TimeSeries& ts - the time to learn
+     * return none
+     */
     virtual void learnNormal(const TimeSeries& ts);
     virtual vector<AnomalyReport> detect(const TimeSeries& ts);
     vector<correlatedFeatures> getNormalModel();
