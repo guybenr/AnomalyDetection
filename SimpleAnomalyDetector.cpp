@@ -90,15 +90,6 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
     }
 }
 
-correlatedFeatures* SimpleAnomalyDetector:: getCorrelatedTo(string feature) {
-    int correlationSize = this->correlation->size();
-    for (int i = 0; i < correlationSize; ++i) {
-        if (this->correlation->at(i).feature1 == feature) {
-            return &this->correlation->at(i);
-        }
-    }
-    return nullptr;
-}
 
 vector<AnomalyReport> SimpleAnomalyDetector:: detect(const TimeSeries& ts) {
     vector<AnomalyReport> *reports = new vector<AnomalyReport>;

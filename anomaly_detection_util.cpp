@@ -60,7 +60,7 @@ float cov(float* x,  float* y, int size) {
  * param: float* y - an array of floats
  * param: float* x - an array of floats
  * param: int size - the size of the array x
- * return: the Pearson correlation coefficient of X and Y
+ * return: the Pearson corrlation coefficient of X and Y
  */
 float pearson(float* x, float* y, int size) {
     if(size == 0) {

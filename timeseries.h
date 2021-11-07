@@ -14,7 +14,7 @@ using namespace std;
 class TimeSeries {
     vector <pair<string , vector<float>>> data{};
 public:
-    TimeSeries(const string& file);
+    TimeSeries(const char* CSVfileName);
 
     /*
     * function return a specified feature's values

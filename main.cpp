@@ -24,7 +24,6 @@ void generateTrainCSV(float a1,float b1, float a2, float b2){
     }
     out.close();
 }
-
 void generateTestCSV(float a1,float b1, float a2, float b2, int anomaly){
     ofstream out("testFile1.csv");
     out<<"A,B,C,D"<<endl;

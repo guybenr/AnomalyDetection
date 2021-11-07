@@ -2,15 +2,16 @@
 // Created by adida on 01/11/2021.
 //
 
-#ifndef ANOMALY_DETECTION_UTIL_CPP_SIMPLEANOMALYDETECTOR_H
-#define ANOMALY_DETECTION_UTIL_CPP_SIMPLEANOMALYDETECTOR_H
+#ifndef SIMPLEANOMALYDETECTOR_H_
+#define SIMPLEANOMALYDETECTOR_H_
 
-#include <vector>
-#include <fstream>
-#include <string>
 #include "anomaly_detection_util.h"
 #include "AnomalyDetector.h"
-using namespace std;
+#include <vector>
+#include <algorithm>
+#include <string.h>
+#include <math.h>
+
 
 struct correlatedFeatures{
     string feature1,feature2; // names of the correlated features
@@ -34,7 +35,6 @@ public:
     virtual void learnNormal(const TimeSeries& ts);
     virtual vector<AnomalyReport> detect(const TimeSeries& ts);
     vector<correlatedFeatures> getNormalModel();
-    correlatedFeatures* getCorrelatedTo(string feature);
 
 private:
     correlatedFeatures* getCorrelated(int current , vector<pair<string,vector<float>>>& data , int sizeData);
@@ -43,4 +43,5 @@ private:
     Point** createFeaturesPoints(vector<float>& feature1, vector<float>& feature2, int featureSize);
     };
 
-#endif //ANOMALY_DETECTION_UTIL_CPP_SIMPLEANOMALYDETECTOR_H
+
+#endif /* SIMPLEANOMALYDETECTOR_H_ */

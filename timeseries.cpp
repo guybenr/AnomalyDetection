@@ -5,8 +5,8 @@
 #include "timeseries.h"
 
 //constructor
-TimeSeries::TimeSeries(const string& file) {
-    fstream f(file);
+TimeSeries::TimeSeries(const char* CSVfileName) {
+    fstream f(CSVfileName);
     string line;
     getline(f, line);
     addFeature(line); // adding features
