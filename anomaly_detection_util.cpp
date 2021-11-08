@@ -87,11 +87,11 @@ Line linear_reg(Point** points, int size) {
     float b (avg(y,size) - (a * avg(x,size)));
     delete[] x;
     delete[] y;
-    Line* line = new Line(a,b);
-    return *line;
+    Line line(a,b);
+    return line;
 }
 
-/*
+/**
  * param: Point p
  * param: Point** - an array of points*
  * param: int size - the number of points

@@ -102,12 +102,13 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
         if(cf == nullptr)
             continue;
         this->correlation->push_back(*cf);
+        delete cf;
     }
 }
 
 
 vector<AnomalyReport> SimpleAnomalyDetector:: detect(const TimeSeries& ts) {
-    vector<AnomalyReport> *reports = new vector<AnomalyReport>;
+    vector<AnomalyReport> reports;
     int correlationSize = this->correlation->size();
     for (int i = 0 ; i < correlationSize ; ++i) {
         correlatedFeatures cur = this->correlation->at(i);
@@ -116,12 +117,13 @@ vector<AnomalyReport> SimpleAnomalyDetector:: detect(const TimeSeries& ts) {
                                               ts.getFeatureValues(cur.feature2), sizeOfPoints);
         for (int j = 0; j < sizeOfPoints; ++j) {
             if (dev(*points[j], cur.lin_reg) > (cur.threshold * 1.1)) {
-                AnomalyReport *report = new AnomalyReport(cur.feature1 + "-" + cur.feature2, j + 1);
-                reports->push_back(*report);
+                AnomalyReport report(cur.feature1 + "-" + cur.feature2, j + 1);
+                reports.push_back(report);
             }
         }
+        deletePoint(points, sizeOfPoints);
     }
-    return *reports;
+    return reports;
 }
 
 vector<correlatedFeatures> SimpleAnomalyDetector:: getNormalModel() {
