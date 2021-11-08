@@ -21,10 +21,10 @@ TimeSeries::TimeSeries(const char* CSVfileName) {
     f.close();
 }
 
-/*
+/**
  * function initial all of the features
- * param: const string& line - a new line with the features to add to the TimeSeries
- * return none
+ * @param const string& line - a new line with the features to add to the TimeSeries
+ * @return none
 */
 void TimeSeries::addFeature(const string& line) {
     int start = 0, end = line.find(',');
@@ -38,10 +38,10 @@ void TimeSeries::addFeature(const string& line) {
     } while (start != 0);
 }
 
-/*
+/**
 * function adds all of the features values in a single line to the time series
-* param: const string& line - a new line with the values to add to the TimeSeries
-* return none
+* @param const string& line - a new line with the values to add to the TimeSeries
+* @return none
 */
 void TimeSeries::updateData(const std::string& values) {
     auto it = this->data.begin();
@@ -55,10 +55,10 @@ void TimeSeries::updateData(const std::string& values) {
     } while (start != 0);
 }
 
-/*
+/**
 * function returns a vector of all of the features
-* param: none
-* return vector<string> - all of the features
+* @param none
+* @return vector<string> - all of the features
 */
 vector<string> TimeSeries::getFeatures() const {
     vector<string> features;
@@ -68,10 +68,10 @@ vector<string> TimeSeries::getFeatures() const {
     return features;
 }
 
-/*
+/**
 * function return a specified feature's values
-* param: string feature - the specified feature
-* return vector<float> - all of the feature's values
+* @param string feature - the specified feature
+* @return vector<float> - all of the feature's values
 */
 vector<float> TimeSeries::getFeatureValues (string feature) const {
     for(auto it = this->data.begin(); it < this->data.end(); it++) {
@@ -81,10 +81,10 @@ vector<float> TimeSeries::getFeatureValues (string feature) const {
     }
 }
 
-/*
+/**
  * function return the data
- * param: none
- * return const vector<pair<string , vector<float>>>& - the data of the timeseries
+ * @param none
+ * @return const vector<pair<string , vector<float>>>& - the data of the timeseries
  */
 vector<pair<string , vector<float>>> TimeSeries :: getData() const {
     return this->data;

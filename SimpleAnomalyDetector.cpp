@@ -11,7 +11,7 @@ SimpleAnomalyDetector::~SimpleAnomalyDetector() {
     delete this->correlation;
 }
 
-correlatedFeatures* createCorrelatedFeatures(string current , string second , Line l , float cor , float th) {
+correlatedFeatures* SimpleAnomalyDetector::createCorrelatedFeatures(string current , string second , Line l , float cor , float th) {
     correlatedFeatures *clp = new correlatedFeatures;
     clp->feature1 = current;
     clp->feature2 = second;
@@ -22,14 +22,17 @@ correlatedFeatures* createCorrelatedFeatures(string current , string second , Li
 }
 
 void SimpleAnomalyDetector::deletePoint(Point **points , int size) {
+    //over all point in points and free it
     for (int i = 0; i < size; ++i) {
         delete points[i];
     }
+    //free the points array
     delete[] points;
 }
 
 Point** SimpleAnomalyDetector::createFeaturesPoints(vector<float> f1, vector<float> f2, int featureSize) {
     Point **points = new Point*[featureSize];
+    //create the points
     for (int i = 0; i < featureSize; ++i) {
         points[i] = new Point(f1[i], f2[i]);
     }
@@ -37,30 +40,40 @@ Point** SimpleAnomalyDetector::createFeaturesPoints(vector<float> f1, vector<flo
 }
 
 Line SimpleAnomalyDetector::linearReg(vector<float>& f1, vector<float>& f2, int featureSize) {
+    //create the two-dimensional points
     Point **points = createFeaturesPoints(f1, f2, featureSize);
+    //create the linear regression
     Line linearReg = linear_reg(points, featureSize);
+    //free points array
     deletePoint(points,featureSize);
     return linearReg;
 }
 
 float SimpleAnomalyDetector::getThreshold(vector<float>& f1, vector<float>& f2, int featureSize) {
+    //create the two-dimensional points
     Point **points = createFeaturesPoints(f1, f2, featureSize);
     float max = 0;
+    //create the linear regression
     Line l = linearReg(f1 , f2 , featureSize);
+    //check the greatest distance
     for (int i = 0 ; i < featureSize ; ++i) {
         float distance = dev(*points[i] , l);
         if (distance > max) {
             max = distance;
         }
     }
+    //free points array
     deletePoint(points,featureSize);
     return max;
 }
 
 correlatedFeatures* SimpleAnomalyDetector::getCorrelated(int current ,vector<pair<string,vector<float>>>& data , int sizeData) {
+    //the minimum value indicating correlation
     float max = 0.9;
     int maxFeature = -1;
+    //how many values
     int sizeValues = data[current].second.size();
+    //over all feature from current vector until the end and check which one is the most correlated
     for(int i = current + 1 ; i < sizeData ; ++i) {
         float cor = pearson(&data[current].second[0], &data[i].second[0], sizeValues);
         if (cor > max) {
@@ -68,16 +81,17 @@ correlatedFeatures* SimpleAnomalyDetector::getCorrelated(int current ,vector<pai
             maxFeature = i;
         }
     }
+    //if there is no correlative feature
     if (maxFeature == -1) {
         return nullptr;
     }
+    //create the correlation according the struct
     pair<string, vector<float>>& feature1 = data[current];
     pair<string, vector<float>>& feature2 = data[maxFeature];
     float threshold = getThreshold(feature1.second, feature2.second, sizeValues);
     Line linearReg = this->linearReg(feature1.second, feature2.second, sizeValues);
     correlatedFeatures* features = createCorrelatedFeatures(feature1.first, feature2.first, linearReg, max, threshold);
     return features;
-
 }
 
 void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
