@@ -1,5 +1,5 @@
 //
-// Created by adida on 31/10/2021.
+// Created by adida on 31/10/2021
 //
 
 #include "timeseries.h"

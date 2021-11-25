@@ -1,5 +1,5 @@
 //
-// Created by adida on 01/11/2021.
+// Created by adida on 01/11/2021
 //
 
 #ifndef ANOMALY_DETECTION_UTIL_CPP_ANOMALYREPORT_H

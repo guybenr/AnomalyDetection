@@ -1,5 +1,5 @@
 //
-// Created by guybe on 25/11/2021.
+// Created by guybe on 25/11/2
 //
 
 #include "minCircle.h"

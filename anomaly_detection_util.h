@@ -1,5 +1,5 @@
 //
-// Created by adida on 14/10/2021.
+// Created by adida on 14/10/2021
 //
 
 #ifndef EX1_ANOMALY_DETECTION_UTIL_H

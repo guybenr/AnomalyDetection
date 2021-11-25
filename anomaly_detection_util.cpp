@@ -1,5 +1,5 @@
 //
-// Created by Guy Ben Razon 209207364 and Adi Aviv 206962904.
+// Created by Guy Ben Razon 209207364 and Adi Aviv 206962904
 
 #include <math.h>
 #include "anomaly_detection_util.h"

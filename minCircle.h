@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <vector>
-#include <stdlib.h>     /* srand, rand */
+#include <stdlib.h>
 #include <time.h>       /* time */
 #include "anomaly_detection_util.h"
 

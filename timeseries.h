@@ -19,7 +19,7 @@ public:
     /**
     * function return a specified feature's values
     * @param string feature - the specified feature
-    * @return vector<float> - all of the feature's values
+    * @return vector<float> - all of the feature's value
     */
     vector<float>getFeatureValues(string feature) const;
 
