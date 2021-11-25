@@ -18,6 +18,7 @@ public:
     Point center;
     float radius;
     Circle(Point c,float r):center(c),radius(r){}
+    bool isInCircle(Point p);
 
 
 };
