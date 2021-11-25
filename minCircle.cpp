@@ -38,12 +38,19 @@ bool Circle:: isInCircle(Point p) {
     return false;
 }
 
-Circle MinCircleRecursive(vector<Point*>& points, vector<Point> boundary) {
+Circle MinCircleRecursive(vector<Point*> points, vector<Point> boundary) {
+    Circle* c = new Circle(Point(0, 0), 0);
     if (points.empty() || boundary.size() == 3)
-        Circle c = createCircle(boundary);
+        *c = createCircle(boundary);
     else {
-        Point p = *points.end();
-
+        Point p = **points.end();
+        points.pop_back();
+        *c = MinCircleRecursive(points, boundary);
+        if (!c->isInCircle(p)) {
+            boundary.push_back(p);
+            *c = MinCircleRecursive(points, boundary);
+        }
+        return *c;
     }
 }
 
