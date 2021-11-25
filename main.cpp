@@ -48,7 +48,7 @@ int main(){
         float x2=(c.center.x-ps[i]->x)*(c.center.x-ps[i]->x);
         float y2=(c.center.y-ps[i]->y)*(c.center.y-ps[i]->y);
         float d=sqrt(x2+y2);
-        if(d>c.radius+1)
+        if(d>c.radius + 1)
             covered=false;
     }
     if(!covered)
@@ -56,7 +56,7 @@ int main(){
 
     auto duration = duration_cast<microseconds>(stop - start);
     int stime=duration.count();
-    cout<<"your time: "<<stime<<" microseconds"<<endl;
+    cout<<"your time: " <<stime<< " microseconds"<<endl;
     if(stime>3000){
         cout<<"over time limit ";
         if(stime<=3500)

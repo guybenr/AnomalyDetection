@@ -4,24 +4,25 @@
 
 #include "minCircle.h"
 #include "anomaly_detection_util.h"
+#include "math.h"
 
 Circle* createCircle(vector<Point> *points) {
     if (points->empty()) {
-        Circle newCircle(Point(0, 0), 0);
-        return &newCircle;
+        Circle* newCircle = new Circle(Point(0, 0), 0);
+        return newCircle;
     }
     if (points->size() == 1) {
-        Circle newCircle(points->at(0), 0);
-        return &newCircle;
+        Circle* newCircle = new Circle(points->at(0), 0);
+        return newCircle;
     }
     if (points->size() == 2) {
         Point a = points->at(0);
         Point b = points->at(1);
         float centerX = (a.x + b.x) / 2;
         float centerY = (a.y + b.y) / 2;
-        float r = sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
-        Circle newCircle(Point(centerX, centerY), r);
-        return &newCircle;
+        float r = sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y)) / 2;
+        Circle* newCircle = new Circle(Point(centerX, centerY), r);
+        return newCircle;
     }
     Point a = points->at(0);
     Point b = points->at(1);
@@ -46,8 +47,8 @@ Circle* createCircle(vector<Point> *points) {
     float k = -(a.x * a.x) - (a.y * a.y) - 2 * g * a.x - 2 * f * a.y;
     float radius = (g * g) + (f * f) - k;
     // radius of circle = sqrt radius
-    Circle newCircle(Point(-g, -f), sqrt(radius));
-    return &newCircle;
+    Circle* newCircle = new Circle(Point(-g, -f), sqrt(radius));
+    return newCircle;
 }
 
 bool Circle::isInCircle(Point p) {
