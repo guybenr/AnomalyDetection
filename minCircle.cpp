@@ -3,7 +3,7 @@
 //
 
 #include "minCircle.h"
-#include "anomaly_detection_util.h"
+
 #include "math.h"
 
 Circle* createCircle(vector<Point> *points) {
