@@ -41,7 +41,6 @@ Circle* createCircle(vector<Point> *points) {
     float y21 = y2 - y1;
     float x31 = x3 - x1;
     float x21 = x2 - x1;
-
     // x1^2 - x3^2
     float sx13 = pow(x1, 2) - pow(x3, 2);
 
