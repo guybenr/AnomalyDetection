@@ -29,7 +29,8 @@ vector<AnomalyReport> HybridAnomalyDetector::detect(const TimeSeries &ts) {
             Circle c = findMinCircle(points,sizeOfPoints);
             Point center = c.center;
             for (int j = 0; j < sizeOfPoints; ++j) {
-                if (distance(*points[j] , center) > (cur.threshold * 1.1)) {
+                cur.threshold = c.radius;
+                if (distance(*points[j] , center) > (c.radius * 1.1)) {
                     AnomalyReport report(cur.feature1 + "-" + cur.feature2, j + 1);
                     reports.push_back(report);
                 }
