@@ -52,7 +52,7 @@ vector<AnomalyReport> HybridAnomalyDetector::detect(const TimeSeries &ts) {
                     reports.push_back(report);
                 }
             }
-        }
+        }//
         else {
             Circle c = findMinCircle(points,sizeOfPoints);
             Point center = c.center;
