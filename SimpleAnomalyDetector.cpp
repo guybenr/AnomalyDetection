@@ -11,13 +11,15 @@ SimpleAnomalyDetector::~SimpleAnomalyDetector() {
     delete this->correlation;
 }
 
-correlatedFeatures* SimpleAnomalyDetector:: createCorrelatedFeatures(string current , string second , Line l, float cor , float th) {
+correlatedFeatures* SimpleAnomalyDetector:: createCorrelatedFeatures
+            (string current , string second , Line l, Circle c, float cor , float th) {
     correlatedFeatures *clp = new correlatedFeatures;
     clp->feature1 = current;
     clp->feature2 = second;
     clp->corrlation = cor;
     clp->lin_reg = l;
     clp->threshold = th;
+    clp->circle = c;
     return clp;
 }
 
@@ -67,13 +69,9 @@ float SimpleAnomalyDetector::getThreshold(vector<float>& f1, vector<float>& f2, 
     return max;
 }
 
-float SimpleAnomalyDetector::corThreshold() {
-    return 0.9;
-};
-
 correlatedFeatures* SimpleAnomalyDetector::getCorrelated(int current ,vector<pair<string,vector<float>>>& data , int sizeData) {
     //the minimum value indicating correlation
-    float max = this->corThreshold();
+    float max = 0.9;
     int maxFeature = -1;
     //how many values
     int sizeValues = data[current].second.size();
@@ -94,7 +92,8 @@ correlatedFeatures* SimpleAnomalyDetector::getCorrelated(int current ,vector<pai
     pair<string, vector<float>>& feature2 = data[maxFeature];
     float threshold = getThreshold(feature1.second, feature2.second, sizeValues, max);
     Line linearReg = this->linearReg(feature1.second, feature2.second, sizeValues);
-    correlatedFeatures* features = createCorrelatedFeatures(feature1.first, feature2.first, linearReg, max, threshold);
+    correlatedFeatures* features = createCorrelatedFeatures
+            (feature1.first, feature2.first, linearReg, Circle(), max, threshold);
     return features;
 }
 

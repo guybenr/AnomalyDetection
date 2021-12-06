@@ -27,8 +27,6 @@ public:
 
 Circle findMinCircle(Point** points,size_t size);
 
-Circle createCircle(vector<Point>);
-
 // you can add here additional methods
 
 #endif /* MINCIRCLE_H_ */

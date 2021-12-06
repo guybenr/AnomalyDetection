@@ -66,7 +66,7 @@ public:
      * function free memory of array of points
      * @param points array of points
      */
-    void deletePoint(Point **points, int size);
+    static void deletePoint(Point **points, int size);
 
 
 /**
@@ -97,7 +97,7 @@ public:
  * @param th the greatest distance to regression line
  * @return pointer to new correlated feature of the specific feature with another feature
  */
-    correlatedFeatures *createCorrelatedFeatures(string current, string second, Line l, float cor, float th);
+    static correlatedFeatures *createCorrelatedFeatures(string current, string second, Line l, Circle c, float cor, float th);
 
 /**
  * function create two-dimensional points from two feature values
@@ -106,9 +106,7 @@ public:
  * @param featureSize the size of values vector
  * @return array of points
  */
-    Point **createFeaturesPoints(vector<float> feature1, vector<float> feature2, int featureSize);
-
-    virtual float corThreshold();
+    static Point **createFeaturesPoints(vector<float> feature1, vector<float> feature2, int featureSize);
 
 };
 
