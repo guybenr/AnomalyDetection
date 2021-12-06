@@ -79,4 +79,6 @@ float dev(Point p,Point** points, int size);
  */
 float dev(Point p,Line l);
 
+float distance(Point a, Point b);
+
 #endif //EX1_ANOMALY_DETECTION_UTIL_H

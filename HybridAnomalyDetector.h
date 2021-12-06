@@ -9,6 +9,8 @@
 class HybridAnomalyDetector:public SimpleAnomalyDetector {
 public:
     virtual ~HybridAnomalyDetector();
+    virtual float corThreshold();
+    virtual vector<AnomalyReport> detect(const TimeSeries &ts);
 
 };
 

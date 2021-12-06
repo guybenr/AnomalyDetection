@@ -11,7 +11,7 @@ SimpleAnomalyDetector::~SimpleAnomalyDetector() {
     delete this->correlation;
 }
 
-correlatedFeatures* SimpleAnomalyDetector::createCorrelatedFeatures(string current , string second , Line l , float cor , float th) {
+correlatedFeatures* SimpleAnomalyDetector:: createCorrelatedFeatures(string current , string second , Line l, float cor , float th) {
     correlatedFeatures *clp = new correlatedFeatures;
     clp->feature1 = current;
     clp->feature2 = second;
@@ -67,16 +67,20 @@ float SimpleAnomalyDetector::getThreshold(vector<float>& f1, vector<float>& f2, 
     return max;
 }
 
+float SimpleAnomalyDetector::corThreshold() {
+    return 0.9;
+};
+
 correlatedFeatures* SimpleAnomalyDetector::getCorrelated(int current ,vector<pair<string,vector<float>>>& data , int sizeData) {
     //the minimum value indicating correlation
-    float max = 0.9;
+    float max = this->corThreshold();
     int maxFeature = -1;
     //how many values
     int sizeValues = data[current].second.size();
     //over all feature from current vector until the end and check which one is the most correlated
     for(int i = current + 1 ; i < sizeData ; ++i) {
         float cor = pearson(&data[current].second[0], &data[i].second[0], sizeValues);
-        if (cor > max) {
+        if (cor >= max) {
             max = cor;
             maxFeature = i;
         }

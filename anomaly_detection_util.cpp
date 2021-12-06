@@ -111,4 +111,8 @@ float dev(Point p,Line l) {
     return (fabsf(p.y - l.f(p.x)));
 }
 
+float distance(Point a, Point b) {
+    return sqrtf((a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y));
+}
+
 
