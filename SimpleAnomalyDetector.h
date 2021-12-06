@@ -77,7 +77,7 @@ public:
  * @param featureSize the size of values vector
  * @return the greatest distance
  */
-    float getThreshold(vector<float> &feature1, vector<float> &feature2, int featureSize);
+    virtual float getThreshold(vector<float> &feature1, vector<float> &feature2, int featureSize, float cor);
 
 /**
  * function create linear regression for two features

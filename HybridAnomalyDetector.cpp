@@ -9,6 +9,34 @@ float HybridAnomalyDetector::corThreshold() {
     return 0.5;
 }
 
+
+float HybridAnomalyDetector::getThreshold(vector<float>& f1, vector<float>& f2, int featureSize, float cor) {
+    //create the two-dimensional points
+    Point **points = createFeaturesPoints(f1, f2, featureSize);
+    if (cor >= 0.9) {
+        float max = 0;
+        //create the linear regression
+        Line l = linearReg(f1, f2, featureSize);
+        //check the greatest distance
+        for (int i = 0; i < featureSize; ++i) {
+            float distance = dev(*points[i], l);
+            if (distance > max) {
+                max = distance;
+            }
+        }
+        //free points array
+        deletePoint(points, featureSize);
+        return max;
+    }
+    else {
+        Circle c = findMinCircle(points, featureSize);
+        float radius = c.radius;
+        deletePoint(points, featureSize);
+        return radius;
+    }
+}
+
+
 vector<AnomalyReport> HybridAnomalyDetector::detect(const TimeSeries &ts) {
     vector<AnomalyReport> reports;
     int correlationSize = this->correlation->size();
@@ -29,8 +57,7 @@ vector<AnomalyReport> HybridAnomalyDetector::detect(const TimeSeries &ts) {
             Circle c = findMinCircle(points,sizeOfPoints);
             Point center = c.center;
             for (int j = 0; j < sizeOfPoints; ++j) {
-                cur.threshold = c.radius;
-                if (distance(*points[j] , center) > (c.radius * 1.1)) {
+                if (distance(*points[j] , center) > (cur.threshold * 1.1)) {
                     AnomalyReport report(cur.feature1 + "-" + cur.feature2, j + 1);
                     reports.push_back(report);
                 }

@@ -49,7 +49,7 @@ Line SimpleAnomalyDetector::linearReg(vector<float>& f1, vector<float>& f2, int 
     return linearReg;
 }
 
-float SimpleAnomalyDetector::getThreshold(vector<float>& f1, vector<float>& f2, int featureSize) {
+float SimpleAnomalyDetector::getThreshold(vector<float>& f1, vector<float>& f2, int featureSize, float cor) {
     //create the two-dimensional points
     Point **points = createFeaturesPoints(f1, f2, featureSize);
     float max = 0;
@@ -92,7 +92,7 @@ correlatedFeatures* SimpleAnomalyDetector::getCorrelated(int current ,vector<pai
     //create the correlation according the struct
     pair<string, vector<float>>& feature1 = data[current];
     pair<string, vector<float>>& feature2 = data[maxFeature];
-    float threshold = getThreshold(feature1.second, feature2.second, sizeValues);
+    float threshold = getThreshold(feature1.second, feature2.second, sizeValues, max);
     Line linearReg = this->linearReg(feature1.second, feature2.second, sizeValues);
     correlatedFeatures* features = createCorrelatedFeatures(feature1.first, feature2.first, linearReg, max, threshold);
     return features;
