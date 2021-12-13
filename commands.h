@@ -5,7 +5,6 @@
 
 #include<iostream>
 #include <string.h>
-
 #include <fstream>
 #include <vector>
 #include "HybridAnomalyDetector.h"
@@ -18,6 +17,23 @@ public:
     virtual void write(string text)=0;
     virtual void write(float f)=0;
     virtual void read(float* f)=0;
+    void writeToFile(string path) {
+        std::ofstream file;
+        file.open(path);
+        string row = this->read();
+        while (row != "done")
+            file << row;
+        file.close();
+    }
+    void readFromFile(string path) {
+        std::ifstream file;
+        file.open(path);
+        string row;
+        getline(file, row);
+        while (row != "done")
+            this->write(row);
+        file.close();
+    }
     virtual ~DefaultIO(){}
 
     // you may add additional methods here

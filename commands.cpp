@@ -2,6 +2,9 @@
 // Created by adida on 13/12/2021.
 //
 #include "commands.h"
+#include <filesystem>
+
+
 
 
 UploadCommand::UploadCommand(DefaultIO *dio, infoCommand *info) : Command(dio) {
@@ -10,11 +13,12 @@ UploadCommand::UploadCommand(DefaultIO *dio, infoCommand *info) : Command(dio) {
 
 void UploadCommand::execute() {
     Command::dio->write("Please upload your local train CSV file.\n");
-    const char* path = Command::dio->read().c_str();
-    TimeSeries trainTs(path);
+    string path = "train.csv";
+    Command::dio->writeToFile(path);
+    TimeSeries trainTs(path.c_str());
     Command::dio->write("Please upload your local train CSV file.\n");
-    path = Command::dio->read().c_str();
-    TimeSeries* testTs = new TimeSeries(path);
+    path = "test.csv";
+    TimeSeries* testTs = new TimeSeries(path.c_str());
     SimpleAnomalyDetector* simpleAnomalyDetector = new SimpleAnomalyDetector();
     Command::info->detector = simpleAnomalyDetector;
     simpleAnomalyDetector->learnNormal(trainTs);
