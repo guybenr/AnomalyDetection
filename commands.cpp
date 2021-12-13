@@ -30,7 +30,12 @@ AlgorithmSettings::AlgorithmSettings(DefaultIO *dio, infoCommand *info) : Comman
 }
 
 void AlgorithmSettings::execute() {
-
+    Command::dio->write("The current correlation threshold is " + this->info->detector->getCorThreshold());
+    string inputThrString = Command::dio->read();
+    float inputThr = inputThrString.stof();
+    if (inputThr > 0 && inputThr < 1) {
+        this->info->detector->setCorThreshold(inputThr);
+    }
 }
 
 
