@@ -37,6 +37,32 @@ DetectAnomalies::DetectAnomalies(DefaultIO *dio, infoCommand *info) : Command(di
 void DetectAnomalies::execute() {
     vector<AnomalyReport> reports = Command::info->detector->detect(*Command::info->ts);
     Command::info->reports = new vector<AnomalyReport>(reports);
+    Command::dio->write("complete detection anomaly.\n");
+}
+
+
+Display::Display(DefaultIO *dio, infoCommand *info) : Command(dio) {
+    Command::info = info;
+}
+
+void Display::execute() {
+    vector<AnomalyReport> reports = *Command::info->reports;
+    for (AnomalyReport report : reports) {
+        Command::dio->write(report.timeStep);
+        Command::dio->write("   ");
+        Command::dio->write(report.description);
+        Command::dio->write("\n");
+    }
+    Command::dio->write("Done.\n");
+
+}
+
+Analyze::Analyze(DefaultIO *dio, infoCommand *info) : Command(dio) {
+    Command::info = info;
+}
+
+void Analyze::execute() {
+
 
 }
 

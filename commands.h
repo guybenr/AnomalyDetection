@@ -63,4 +63,15 @@ class DetectAnomalies:public Command {
 };
 
 
+class Display:public Command {
+    Display(DefaultIO *dio, infoCommand *info);
+    virtual void execute();
+};
+
+class Analyze:public Command {
+    Analyze(DefaultIO *dio, infoCommand *info);
+    virtual void execute();
+};
+
+
 #endif /* COMMANDS_H_ */
