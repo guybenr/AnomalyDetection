@@ -25,18 +25,30 @@ public:
 
 // you may add here helper classes
 
+struct infoCommand {
+    SimpleAnomalyDetector *detector = nullptr;
+    TimeSeries *ts = nullptr;
+};
 
 // you may edit this class
 class Command{
+protected:
     DefaultIO* dio;
+    infoCommand info;
+
 public:
     Command(DefaultIO* dio):dio(dio){}
     virtual void execute()=0;
+    virtual string getDes()=0;
     virtual ~Command(){}
 };
 
 // implement here your command classes
 
+class UploadCommand:public Command {
+    UploadCommand(DefaultIO* dio): Command(dio){}
+    virtual void execute();
+};
 
 
 #endif /* COMMANDS_H_ */

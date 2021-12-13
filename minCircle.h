@@ -20,8 +20,6 @@ public:
     Circle(): center(), radius(0){}
     Circle(Point c,float r):center(c),radius(r){}
     bool isInCircle(Point p);
-
-
 };
 // --------------------------------------
 
