@@ -28,6 +28,7 @@ public:
 struct infoCommand {
     SimpleAnomalyDetector *detector = nullptr;
     TimeSeries *ts = nullptr;
+    vector<AnomalyReport>* reports = nullptr;
 };
 
 // you may edit this class
@@ -47,6 +48,17 @@ public:
 
 class UploadCommand:public Command {
     UploadCommand(DefaultIO *dio, infoCommand *info);
+    virtual void execute();
+};
+
+class AlgorithmSettings:public Command {
+    AlgorithmSettings(DefaultIO *dio, infoCommand *info);
+    virtual void execute();
+};
+
+
+class DetectAnomalies:public Command {
+    DetectAnomalies(DefaultIO *dio, infoCommand *info);
     virtual void execute();
 };
 
