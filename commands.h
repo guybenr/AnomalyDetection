@@ -34,7 +34,7 @@ struct infoCommand {
 class Command{
 protected:
     DefaultIO* dio;
-    infoCommand info;
+    infoCommand* info;
 
 public:
     Command(DefaultIO* dio):dio(dio){}
@@ -46,7 +46,7 @@ public:
 // implement here your command classes
 
 class UploadCommand:public Command {
-    UploadCommand(DefaultIO* dio): Command(dio){}
+    UploadCommand(DefaultIO *dio, infoCommand *info);
     virtual void execute();
 };
 
