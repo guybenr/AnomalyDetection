@@ -71,7 +71,7 @@ float SimpleAnomalyDetector::getThreshold(vector<float>& f1, vector<float>& f2, 
 
 correlatedFeatures* SimpleAnomalyDetector::getCorrelated(int current ,vector<pair<string,vector<float>>>& data , int sizeData) {
     //the minimum value indicating correlation
-    float max = 0.9;
+    float max = this->corThreshold;
     int maxFeature = -1;
     //how many values
     int sizeValues = data[current].second.size();
@@ -107,6 +107,14 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts) {
         this->correlation->push_back(*cf);
         delete cf;
     }
+}
+
+float SimpleAnomalyDetector :: getCorThreshold() {
+    return this->corThreshold;
+}
+
+void SimpleAnomalyDetector :: setCorThreshold(float corThreshold) {
+    this->corThreshold = corThreshold;
 }
 
 

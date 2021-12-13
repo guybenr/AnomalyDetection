@@ -26,7 +26,7 @@ correlatedFeatures* HybridAnomalyDetector::getCorrelated
     //create the correlation according the struct
     pair<string, vector<float>>& feature1 = data[current];
     pair<string, vector<float>>& feature2 = data[maxFeature];
-    if (max >= 0.9) {
+    if (max >= getCorThreshold()) {
         float threshold = getThreshold(feature1.second, feature2.second, sizeValues, max);
         Line linearReg = this->linearReg(feature1.second, feature2.second, sizeValues);
         correlatedFeatures *features = createCorrelatedFeatures
@@ -52,7 +52,7 @@ vector<AnomalyReport> HybridAnomalyDetector::detect(const TimeSeries &ts) {
         Point **points = createFeaturesPoints(ts.getFeatureValues(cur.feature1),
                                               ts.getFeatureValues(cur.feature2), sizeOfPoints);
         // if the corrlation >= 0.9 then its a Linear regression
-        if (cur.corrlation >= 0.9) {
+        if (cur.corrlation >= getCorThreshold()) {
             for (int j = 0; j < sizeOfPoints; ++j) {
                 if (dev(*points[j], cur.lin_reg) > (cur.threshold * 1.1)) {
                     AnomalyReport report(cur.feature1 + "-" + cur.feature2, j + 1);
