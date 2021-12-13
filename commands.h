@@ -21,8 +21,10 @@ public:
         std::ofstream file;
         file.open(path);
         string row = this->read();
-        while (row != "done")
+        while (row != "done") {
             file << row;
+            row = this->read();
+        }
         file.close();
     }
     void readFromFile(string path) {
@@ -30,8 +32,10 @@ public:
         file.open(path);
         string row;
         getline(file, row);
-        while (row != "done")
+        while (row != "done") {
             this->write(row);
+            getline(file, row);
+        }
         file.close();
     }
     virtual ~DefaultIO(){}

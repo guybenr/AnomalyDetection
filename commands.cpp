@@ -5,8 +5,6 @@
 #include <filesystem>
 
 
-
-
 UploadCommand::UploadCommand(DefaultIO *dio, infoCommand *info) : Command(dio) {
     Command::info = info;
 }
@@ -18,11 +16,12 @@ void UploadCommand::execute() {
     TimeSeries trainTs(path.c_str());
     Command::dio->write("Please upload your local train CSV file.\n");
     path = "test.csv";
-    TimeSeries* testTs = new TimeSeries(path.c_str());
-    SimpleAnomalyDetector* simpleAnomalyDetector = new SimpleAnomalyDetector();
+    TimeSeries *testTs = new TimeSeries(path.c_str());
+    SimpleAnomalyDetector *simpleAnomalyDetector = new SimpleAnomalyDetector();
     Command::info->detector = simpleAnomalyDetector;
     simpleAnomalyDetector->learnNormal(trainTs);
     Command::info->ts = testTs;
+    Command::dio->write("Upload complete.\n");
 }
 
 AlgorithmSettings::AlgorithmSettings(DefaultIO *dio, infoCommand *info) : Command(dio) {
@@ -30,9 +29,11 @@ AlgorithmSettings::AlgorithmSettings(DefaultIO *dio, infoCommand *info) : Comman
 }
 
 void AlgorithmSettings::execute() {
-    Command::dio->write("The current correlation threshold is " + this->info->detector->getCorThreshold());
+    Command::dio->write("The current correlation threshold is ");
+    Command::dio->write( this->info->detector->getCorThreshold());
+    Command::dio->write("\n");
     string inputThrString = Command::dio->read();
-    float inputThr = inputThrString.stof();
+    float inputThr = stof(inputThrString);
     if (inputThr > 0 && inputThr < 1) {
         this->info->detector->setCorThreshold(inputThr);
     }
@@ -56,7 +57,7 @@ Display::Display(DefaultIO *dio, infoCommand *info) : Command(dio) {
 
 void Display::execute() {
     vector<AnomalyReport> reports = *Command::info->reports;
-    for (AnomalyReport report : reports) {
+    for (AnomalyReport report: reports) {
         Command::dio->write(report.timeStep);
         Command::dio->write("   ");
         Command::dio->write(report.description);
@@ -70,8 +71,37 @@ Analyze::Analyze(DefaultIO *dio, infoCommand *info) : Command(dio) {
     Command::info = info;
 }
 
-void Analyze::execute() {
 
+void Analyze::execute() {
+    Command::dio->write("Please upload your local anomalies CSV file.\n");
+    string path = "anomalies.txt";
+    Command::dio->writeToFile(path);
+    std::ifstream anomalies;
+    anomalies.open(path);
+    //num of row=P , N = no detection
+    int P = 0;
+    int N = 0;
+    string line;
+    if (anomalies.is_open()) {
+        getline(anomalies, line);
+        int end = line.find(","); //index of comma
+        while (line != "done") {
+            P++; // another row
+            int x = stoi(line.substr(0, end)); // start time
+            int y = stoi(line.substr(end + 1, line.size())); // end time
+            N += (y - x + 1);
+            getline(anomalies, line);
+        }
+    }
+
+
+    vector<AnomalyReport> reports = *Command::info->reports;
+    for (AnomalyReport report: reports) {
+        Command::dio->write(report.timeStep);
+        Command::dio->write("   ");
+        Command::dio->write(report.description);
+        Command::dio->write("\n");
+    }
 
 }
 
