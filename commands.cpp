@@ -22,6 +22,7 @@ void UploadCommand::execute() {
     Command::dio->write("Upload complete.\n");
     Command::dio->write("Please upload your local test CSV file.\n");
     path = "test.csv";
+    Command::dio->writeToFile(path);
     TimeSeries *testTs = new TimeSeries(path.c_str());
     SimpleAnomalyDetector *simpleAnomalyDetector = new SimpleAnomalyDetector();
     Command::info->detector = simpleAnomalyDetector;
