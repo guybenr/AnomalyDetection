@@ -65,12 +65,14 @@ public:
 // implement here your command classes
 
 class UploadCommand:public Command {
+public:
     UploadCommand(DefaultIO *dio, infoCommand *info);
     virtual string getDes();
     virtual void execute();
 };
 
 class AlgorithmSettings:public Command {
+public:
     AlgorithmSettings(DefaultIO *dio, infoCommand *info);
     virtual string getDes();
     virtual void execute();
@@ -78,6 +80,7 @@ class AlgorithmSettings:public Command {
 
 
 class DetectAnomalies:public Command {
+public:
     DetectAnomalies(DefaultIO *dio, infoCommand *info);
     virtual string getDes();
     virtual void execute();
@@ -85,12 +88,14 @@ class DetectAnomalies:public Command {
 
 
 class Display:public Command {
+public:
     Display(DefaultIO *dio, infoCommand *info);
     virtual string getDes();
     virtual void execute();
 };
 
 class Analyze:public Command {
+public:
     Analyze(DefaultIO *dio, infoCommand *info);
     virtual string getDes();
     virtual void execute();
@@ -106,6 +111,7 @@ private:
 
 
 class Exit:public Command {
+public:
     Exit(DefaultIO *dio, infoCommand *info);
     virtual string getDes();
     virtual void execute();
