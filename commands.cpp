@@ -2,6 +2,7 @@
 // Created by adida on 13/12/2021.
 //
 #include "commands.h"
+#include <algorithm>
 
 
 UploadCommand::UploadCommand(DefaultIO *dio, infoCommand *info) : Command(dio) {
@@ -190,15 +191,17 @@ void Analyze::execute() {
     Command::dio->write("\n");
 }
 
+int comp(AnomalyReport a,AnomalyReport b) {
+    if ((long) a.description.compare(b.description) == 0) {
+        return a.timeStep - b.timeStep;
+    }
+    return (long) a.description.compare(b.description);
+}
+
 vector<pair<int, int>> Analyze:: getUnionReports() {
     vector<AnomalyReport> *reports = Command::info->reports;
     vector<pair<int, int>> unionReports;
-    sort(reports->begin(), reports->end(), [](AnomalyReport a, AnomalyReport b) {
-        if ((long) a.description.compare(b.description) == 0) {
-            return a.timeStep - b.timeStep;
-        }
-        return (long) a.description.compare(b.description);
-    });
+    sort(reports->begin(), reports->end(), comp);
     if (reports->empty())
         return unionReports;
     AnomalyReport *lastReport = &(*reports)[0];

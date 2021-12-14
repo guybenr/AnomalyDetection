@@ -59,7 +59,12 @@ public:
     Command(DefaultIO* dio):dio(dio){}
     virtual void execute()=0;
     virtual string getDes()=0;
-    virtual ~Command()=0;
+    virtual ~Command() {
+        delete info->reports;
+        delete info->ts;
+        delete info->detector;
+        delete info;
+    }
 };
 
 // implement here your command classes

@@ -6,7 +6,6 @@
  */
 
 #include <iostream>
-#include <fstream>
 #include "commands.h"
 #include "CLI.h"
 
