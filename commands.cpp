@@ -10,7 +10,7 @@ UploadCommand::UploadCommand(DefaultIO *dio, infoCommand *info) : Command(dio) {
 }
 
 string UploadCommand::getDes() {
-    string s = "1. upload a time series csv file\n";
+    string s = "1.upload a time series csv file\n";
     return s;
 }
 
@@ -34,7 +34,7 @@ AlgorithmSettings::AlgorithmSettings(DefaultIO *dio, infoCommand *info) : Comman
 }
 
 string AlgorithmSettings::getDes() {
-    string s = "2. algorithm settings\n";
+    string s = "2.algorithm settings\n";
     return s;
 }
 
@@ -55,7 +55,7 @@ DetectAnomalies::DetectAnomalies(DefaultIO *dio, infoCommand *info) : Command(di
 }
 
 string DetectAnomalies::getDes() {
-    string s = "3. detect anomalies\n";
+    string s = "3.detect anomalies\n";
     return s;
 }
 
@@ -71,7 +71,7 @@ Display::Display(DefaultIO *dio, infoCommand *info) : Command(dio) {
 }
 
 string Display::getDes() {
-    string s = "4. display results\n";
+    string s = "4.display results\n";
     return s;
 }
 
@@ -92,7 +92,7 @@ Analyze::Analyze(DefaultIO *dio, infoCommand *info) : Command(dio) {
 }
 
 string Analyze::getDes() {
-    string s = "5. upload anomalies and analyze results\n";
+    string s = "5.upload anomalies and analyze results\n";
     return s;
 }
 
@@ -225,7 +225,7 @@ Exit::Exit(DefaultIO *dio, infoCommand *info) : Command(dio) {
 }
 
 string Exit::getDes() {
-    string s = "6. exit\n";
+    string s = "6.exit\n";
     return s;
 }
 
