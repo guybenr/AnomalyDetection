@@ -91,6 +91,9 @@ class Display:public Command {
 class Analyze:public Command {
     Analyze(DefaultIO *dio, infoCommand *info);
     virtual void execute();
+
+private:
+    vector<pair<int, int>> updateAnomalies(int &P, int &N, std::ifstream anomaliesTxt);
 };
 
 

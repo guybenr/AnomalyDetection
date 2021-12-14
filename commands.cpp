@@ -72,26 +72,37 @@ Analyze::Analyze(DefaultIO *dio, infoCommand *info) : Command(dio) {
 }
 
 
-void Analyze::execute() {
-    Command::dio->write("Please upload your local anomalies CSV file.\n");
-    string path = "anomalies.txt";
-    Command::dio->writeToFile(path);
-    std::ifstream anomalies;
-    anomalies.open(path);
-    //num of row=P , N = no detection
-    int P = 0;
-    int N = 0;
+
+vector<pair<int, int>> Analyze:: updateAnomalies(int &P, int &N, std::ifstream anomaliesTxt) {
     string line;
-    if (anomalies.is_open()) {
-        getline(anomalies, line);
+    vector<pair<int, int>> anomalies;
+    if (anomaliesTxt.is_open()) {
+        getline(anomaliesTxt, line);
         int end = line.find(","); //index of comma
         while (line != "done") {
             P++; // another row
             int x = stoi(line.substr(0, end)); // start time
             int y = stoi(line.substr(end + 1, line.size())); // end time
             N += (y - x + 1);
+            anomalies.push_back(pair(x, y));
             getline(anomalies, line);
         }
+        N = Command::info->ts->getData()[0].second.size() - N;
+    }
+    return anomalies;
+}
+
+void Analyze::execute() {
+    Command::dio->write("Please upload your local anomalies CSV file.\n");
+    string path = "anomalies.txt";
+    Command::dio->writeToFile(path);
+    std::ifstream anomaliesTxt;
+    anomaliesTxt.open(path);
+    //num of row=P , N = no detection
+    int P = 0;
+    int N = 0;
+    vector<pair<int, int>> anomalies = this->updateAnomalies(P, N, anomaliesTxt);
+
     }
 
 
