@@ -1,5 +1,3 @@
-
-
 #ifndef COMMANDS_H_
 #define COMMANDS_H_
 
@@ -94,9 +92,11 @@ class Analyze:public Command {
 
 private:
     vector<pair<int, int>> updateAnomalies(int &P, int &N, std::ifstream &anomaliesTxt);
-    vector<pair<int, int>> Analyze:: NoAnomalies(vector<pair<int, int>> anomalies);
-    void  Analyze::updateFPandTP(int &FP, int &TP, vector<pair<int, int>> *anomalies, vector<pair<int, int>> *unionAnomalies);
-    void  Analyze::updateFNorTN(int &P, vector<pair<int, int>> *vector1, vector<pair<int, int>> *vector2);
+    vector<pair<int, int>> NoAnomalies(vector<pair<int, int>> anomalies);
+    void  updateFPandTP(int &FP, int &TP, vector<pair<int, int>> *anomalies, vector<pair<int, int>> *unionAnomalies);
+    void  updateFNorTN(int &P, vector<pair<int, int>> *vector1, vector<pair<int, int>> *vector2);
+    vector<pair<int, int>> getUnionReports();
+
 };
 
 

@@ -2,7 +2,6 @@
 // Created by adida on 13/12/2021.
 //
 #include "commands.h"
-#include <filesystem>
 
 
 UploadCommand::UploadCommand(DefaultIO *dio, infoCommand *info) : Command(dio) {
@@ -162,6 +161,28 @@ void Analyze::execute() {
     Command::dio->write("True Positive Rate:");
 }
 
-
-
-
+vector<pair<int, int>> Analyze:: getUnionReports() {
+    vector<AnomalyReport> *reports = Command::info->reports;
+    vector<pair<int, int>> unionReports;
+    sort(reports->begin(), reports->end(), [](AnomalyReport a, AnomalyReport b) {
+        if ((long) a.description.compare(b.description) == 0) {
+            return a.timeStep - b.timeStep;
+        }
+        return (long) a.description.compare(b.description);
+    });
+    if (reports->empty())
+        return unionReports;
+    AnomalyReport *lastReport = &(*reports)[0];
+    int size = reports->size();
+    for (int i = 0; i < size; ++i) {
+        AnomalyReport report = (*reports)[i];
+        if (!lastReport->description.compare(report.description)) {
+            unionReports.push_back(pair<int, int>(lastReport->timeStep, (*reports)[i - 1].timeStep));
+            lastReport = &(*reports)[i];
+        } else if (report.timeStep - lastReport->timeStep != 1) {
+            unionReports.push_back(pair<int, int>(lastReport->timeStep, (*reports)[i - 1].timeStep));
+            lastReport = &(*reports)[i];
+        }
+    }
+    return unionReports;
+}
