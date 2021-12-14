@@ -28,8 +28,8 @@ void CLI::printMenu() {
 
 
 void CLI::start(){
-    this->printMenu();
     do {
+        this->printMenu();
         float index = 0;
         this->dio->read(&index);
         int i = (int) index;

@@ -40,14 +40,31 @@ string AlgorithmSettings::getDes() {
     return s;
 }
 
+float roundOff(float value, unsigned char prec)
+{
+    float pow_10 = pow(10.0f, (float)prec);
+    return round(value * pow_10) / pow_10;
+}
+
 void AlgorithmSettings::execute() {
     Command::dio->write("The current correlation threshold is ");
     Command::dio->write(this->info->detector->getCorThreshold());
     Command::dio->write("\n");
     string inputThrString = Command::dio->read();
     float inputThr = stof(inputThrString);
-    if (inputThr > 0 && inputThr < 1) {
-        this->info->detector->setCorThreshold(inputThr);
+    while (true) {
+        if (inputThr > 0 && inputThr < 1) {
+            this->info->detector->setCorThreshold(inputThr);
+            break;
+        }
+        else {
+            Command::dio->write("please choose a value between 0 and 1.\n");
+            Command::dio->write("The current correlation threshold is ");
+            Command::dio->write(this->info->detector->getCorThreshold());
+            Command::dio->write("\n");
+            inputThrString = Command::dio->read();
+            inputThr = stof(inputThrString);
+        }
     }
 }
 
