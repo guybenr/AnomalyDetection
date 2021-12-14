@@ -30,7 +30,7 @@ AlgorithmSettings::AlgorithmSettings(DefaultIO *dio, infoCommand *info) : Comman
 
 void AlgorithmSettings::execute() {
     Command::dio->write("The current correlation threshold is ");
-    Command::dio->write( this->info->detector->getCorThreshold());
+    Command::dio->write(this->info->detector->getCorThreshold());
     Command::dio->write("\n");
     string inputThrString = Command::dio->read();
     float inputThr = stof(inputThrString);
@@ -72,8 +72,7 @@ Analyze::Analyze(DefaultIO *dio, infoCommand *info) : Command(dio) {
 }
 
 
-
-vector<pair<int, int>> Analyze:: updateAnomalies(int &P, int &N, std::ifstream anomaliesTxt) {
+vector<pair<int, int>> Analyze::updateAnomalies(int &P, int &N, std::ifstream &anomaliesTxt) {
     string line;
     vector<pair<int, int>> anomalies;
     if (anomaliesTxt.is_open()) {
@@ -84,13 +83,60 @@ vector<pair<int, int>> Analyze:: updateAnomalies(int &P, int &N, std::ifstream a
             int x = stoi(line.substr(0, end)); // start time
             int y = stoi(line.substr(end + 1, line.size())); // end time
             N += (y - x + 1);
-            anomalies.push_back(pair(x, y));
-            getline(anomalies, line);
+            anomalies.push_back(pair<int, int>(x, y));
+            getline(anomaliesTxt, line);
         }
         N = Command::info->ts->getData()[0].second.size() - N;
     }
     return anomalies;
 }
+
+
+vector<pair<int, int>> Analyze::NoAnomalies(vector<pair<int, int>> anomalies) {
+    string line;
+    vector<pair<int, int>> NoAnomalies;
+    int start = 0;
+    for (pair<int, int> p: anomalies) {
+        if (start < p.first - 1) {
+            NoAnomalies.push_back(pair<int, int>(start, p.first - 1));
+        }
+        start = p.second + 1;
+    }
+    NoAnomalies.push_back(pair<int,int>(start , Command::info->ts->getData()[0].second.size()));
+    return NoAnomalies;
+}
+
+
+void  Analyze::updateFPandTP(int &FP, int &TP, vector<pair<int, int>> *anomalies, vector<pair<int, int>> *unionAnomalies) {
+    for (pair<int, int> pCheck: *unionAnomalies) {
+        bool flagTP = false;
+        for (pair<int, int> pReal: *anomalies) {
+            if (pCheck.second >= pReal.first || pCheck.first >= pReal.second) {
+                TP += 1;
+                flagTP = true;
+                break;
+            }
+        }
+        if (!flagTP)
+            FP += 1;
+    }
+}
+
+
+void  Analyze::updateFNorTN(int &P, vector<pair<int, int>> *vector1, vector<pair<int, int>> *vector2) {
+    for (pair<int, int> pCheck: *vector1) {
+        bool flagTN = false;
+        for (pair<int, int> pReal: *vector2) {
+            if (pCheck.second >= pReal.first || pCheck.first >= pReal.second) {
+                flagTN = true;
+                break;
+            }
+        }
+        if (!flagTN)
+            P += 1;
+    }
+}
+
 
 void Analyze::execute() {
     Command::dio->write("Please upload your local anomalies CSV file.\n");
@@ -102,19 +148,20 @@ void Analyze::execute() {
     int P = 0;
     int N = 0;
     vector<pair<int, int>> anomalies = this->updateAnomalies(P, N, anomaliesTxt);
-
-    }
-
-
-    vector<AnomalyReport> reports = *Command::info->reports;
-    for (AnomalyReport report: reports) {
-        Command::dio->write(report.timeStep);
-        Command::dio->write("   ");
-        Command::dio->write(report.description);
-        Command::dio->write("\n");
-    }
-
+    vector<pair<int, int>> NoAnomalies = this->NoAnomalies(anomalies);
+    vector<pair<int, int>> unionAnomalies;
+    int FP = 0;
+    int TP = 0;
+    int FN = 0;
+    int TN = 0;
+    updateFPandTP(FP, TP, &anomalies, &unionAnomalies);
+    updateFNorTN(TN, &NoAnomalies, &unionAnomalies);
+    updateFNorTN(FN, &anomalies, &unionAnomalies);
+    float tRate = TP/P;
+    float fRate = FP/N;
+    Command::dio->write("True Positive Rate:");
 }
+
 
 
 
