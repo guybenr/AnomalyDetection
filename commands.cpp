@@ -8,6 +8,11 @@ UploadCommand::UploadCommand(DefaultIO *dio, infoCommand *info) : Command(dio) {
     Command::info = info;
 }
 
+string UploadCommand::getDes() {
+    string s = "1. upload a time series csv file";
+    return s;
+}
+
 void UploadCommand::execute() {
     Command::dio->write("Please upload your local train CSV file.\n");
     string path = "train.csv";
@@ -27,6 +32,11 @@ AlgorithmSettings::AlgorithmSettings(DefaultIO *dio, infoCommand *info) : Comman
     Command::info = info;
 }
 
+string AlgorithmSettings::getDes() {
+    string s = "2. algorithm settings";
+    return s;
+}
+
 void AlgorithmSettings::execute() {
     Command::dio->write("The current correlation threshold is ");
     Command::dio->write(this->info->detector->getCorThreshold());
@@ -43,6 +53,11 @@ DetectAnomalies::DetectAnomalies(DefaultIO *dio, infoCommand *info) : Command(di
     Command::info = info;
 }
 
+string DetectAnomalies::getDes() {
+    string s = "3. detect anomalies";
+    return s;
+}
+
 void DetectAnomalies::execute() {
     vector<AnomalyReport> reports = Command::info->detector->detect(*Command::info->ts);
     Command::info->reports = new vector<AnomalyReport>(reports);
@@ -52,6 +67,11 @@ void DetectAnomalies::execute() {
 
 Display::Display(DefaultIO *dio, infoCommand *info) : Command(dio) {
     Command::info = info;
+}
+
+string Display::getDes() {
+    string s = "4. display results";
+    return s;
 }
 
 void Display::execute() {
@@ -70,6 +90,10 @@ Analyze::Analyze(DefaultIO *dio, infoCommand *info) : Command(dio) {
     Command::info = info;
 }
 
+string Analyze::getDes() {
+    string s = "5. upload anomalies and analyze results";
+    return s;
+}
 
 vector<pair<int, int>> Analyze::updateAnomalies(int &P, int &N, std::ifstream &anomaliesTxt) {
     string line;
@@ -190,4 +214,18 @@ vector<pair<int, int>> Analyze:: getUnionReports() {
         }
     }
     return unionReports;
+}
+
+
+Exit::Exit(DefaultIO *dio, infoCommand *info) : Command(dio) {
+    Command::info = info;
+}
+
+string Exit::getDes() {
+    string s = "6. exit";
+    return s;
+}
+
+void Exit::execute() {
+    return;
 }

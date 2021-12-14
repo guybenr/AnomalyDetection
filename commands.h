@@ -66,28 +66,33 @@ public:
 
 class UploadCommand:public Command {
     UploadCommand(DefaultIO *dio, infoCommand *info);
+    virtual string getDes();
     virtual void execute();
 };
 
 class AlgorithmSettings:public Command {
     AlgorithmSettings(DefaultIO *dio, infoCommand *info);
+    virtual string getDes();
     virtual void execute();
 };
 
 
 class DetectAnomalies:public Command {
     DetectAnomalies(DefaultIO *dio, infoCommand *info);
+    virtual string getDes();
     virtual void execute();
 };
 
 
 class Display:public Command {
     Display(DefaultIO *dio, infoCommand *info);
+    virtual string getDes();
     virtual void execute();
 };
 
 class Analyze:public Command {
     Analyze(DefaultIO *dio, infoCommand *info);
+    virtual string getDes();
     virtual void execute();
 
 private:
@@ -100,5 +105,9 @@ private:
 };
 
 
-
+class Exit:public Command {
+    Exit(DefaultIO *dio, infoCommand *info);
+    virtual string getDes();
+    virtual void execute();
+};
 #endif /* COMMANDS_H_ */
