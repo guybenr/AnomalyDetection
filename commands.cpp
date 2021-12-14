@@ -19,7 +19,8 @@ void UploadCommand::execute() {
     string path = "train.csv";
     Command::dio->writeToFile(path);
     TimeSeries trainTs(path.c_str());
-    Command::dio->write("Please upload your local train CSV file.\n");
+    Command::dio->write("Upload complete.\n");
+    Command::dio->write("Please upload your local test CSV file.\n");
     path = "test.csv";
     TimeSeries *testTs = new TimeSeries(path.c_str());
     SimpleAnomalyDetector *simpleAnomalyDetector = new SimpleAnomalyDetector();
