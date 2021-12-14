@@ -148,7 +148,7 @@ void Analyze::execute() {
     int N = 0;
     vector<pair<int, int>> anomalies = this->updateAnomalies(P, N, anomaliesTxt);
     vector<pair<int, int>> NoAnomalies = this->NoAnomalies(anomalies);
-    vector<pair<int, int>> unionAnomalies;
+    vector<pair<int, int>> unionAnomalies = this->getUnionReports();
     int FP = 0;
     int TP = 0;
     int FN = 0;
@@ -156,9 +156,14 @@ void Analyze::execute() {
     updateFPandTP(FP, TP, &anomalies, &unionAnomalies);
     updateFNorTN(TN, &NoAnomalies, &unionAnomalies);
     updateFNorTN(FN, &anomalies, &unionAnomalies);
-    float tRate = TP/P;
+    float ftRate = TP/P;
     float fRate = FP/N;
     Command::dio->write("True Positive Rate:");
+    Command::dio->write(ftRate);
+    Command::dio->write("\n");
+    Command::dio->write("False Positive Rate:");
+    Command::dio->write(fRate);
+    Command::dio->write("\n");
 }
 
 vector<pair<int, int>> Analyze:: getUnionReports() {
