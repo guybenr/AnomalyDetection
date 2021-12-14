@@ -30,8 +30,9 @@ void CLI::printMenu() {
 void CLI::start(){
     this->printMenu();
     do {
-        string input = this->dio->read();
-        int i = stoi(input);
+        float index = 0;
+        this->dio->read(&index);
+        int i = (int) index;
         if (i >= 6 || i <= 0) {
             break;
         }
