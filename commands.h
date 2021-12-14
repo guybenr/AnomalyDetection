@@ -20,7 +20,7 @@ public:
         file.open(path);
         string row = this->read();
         while (row != "done") {
-            file << row;
+            file << row << "\n";
             row = this->read();
         }
         file.close();
