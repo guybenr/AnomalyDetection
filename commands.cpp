@@ -99,7 +99,7 @@ void Display::execute() {
     vector<AnomalyReport> reports = *Command::info->reports;
     for (AnomalyReport report: reports) {
         Command::dio->write(report.timeStep);
-        Command::dio->write("   ");
+        Command::dio->write("\t");
         Command::dio->write(report.description);
         Command::dio->write("\n");
     }
@@ -156,7 +156,10 @@ void  Analyze::updateFPandTP(int &FP, int &TP, vector<pair<int, int>> *anomalies
     for (pair<int, int> pCheck: *unionAnomalies) {
         bool flagTP = false;
         for (pair<int, int> pReal: *anomalies) {
-            if (pCheck.second >= pReal.first || pCheck.first >= pReal.second) {
+            if ((pReal.second >= pCheck.first && pReal.first <= pCheck.first) ||
+                    (pCheck.second >= pReal.first && pCheck.second <= pReal.second) ||
+                    (pCheck.first <= pReal.first && pCheck.second >= pReal.second) ||
+                    (pReal.first <= pCheck.first && pReal.second >= pCheck.second)) {
                 TP += 1;
                 flagTP = true;
                 break;
@@ -187,6 +190,7 @@ void Analyze::execute() {
     Command::dio->write("Please upload your local anomalies file.\n");
     string path = "anomalies.txt";
     Command::dio->writeToFile(path);
+    Command::dio->write("Upload complete.\n");
     std::ifstream anomaliesTxt;
     anomaliesTxt.open(path);
     //num of row=P , N = no detection
@@ -202,45 +206,39 @@ void Analyze::execute() {
     updateFPandTP(FP, TP, &anomalies, &unionAnomalies);
     updateFNorTN(TN, &NoAnomalies, &unionAnomalies);
     updateFNorTN(FN, &anomalies, &unionAnomalies);
-    float ftRate = TP/P;
-    float fRate = FP/N;
+    float tRate = (float)TP/(float)P;
+    float fRate = (float)FP/(float)N;
+    tRate = roundOff((float)((int)(tRate*1000))/(float)1000 , 3);
+    fRate =roundOff((float)((int)(fRate*1000))/(float)1000 , 3);
     string s;
-    s.append("True Positive Rate: ").append(to_string(ftRate)).append("\n").append
-            ("False Positive Rate: ").append(to_string(fRate)).append("\n");
-    Command::dio->write(s);
-//    Command::dio->write("True Positive Rate: ");
-//    Command::dio->write(ftRate);
-//    Command::dio->write("\n");
-//    Command::dio->write("False Positive Rate:");
-//    Command::dio->write(fRate);
-//    Command::dio->write("\n");
-}
-
-int AnomalyReportComp(AnomalyReport & a,AnomalyReport & b) {
-    if ((long) a.description.compare(b.description) == 0) {
-        return a.timeStep - b.timeStep;
-    }
-    return (long) a.description.compare(b.description);
+    Command::dio->write("True Positive Rate: ");
+    Command::dio->write(tRate);
+    Command::dio->write("\nFalse Positive Rate: ");
+    Command::dio->write(fRate);
+    Command::dio->write("\n");
 }
 
 vector<pair<int, int>> Analyze:: getUnionReports() {
     vector<AnomalyReport> *reports = Command::info->reports;
     vector<pair<int, int>> unionReports;
-    sort(reports->begin(), reports->end(), AnomalyReportComp);
     if (reports->empty())
         return unionReports;
+    else if (reports->size() == 1) {
+        unionReports.push_back(pair<int, int>((*reports)[0].timeStep, (*reports)[0].timeStep));
+    }
     AnomalyReport *lastReport = &(*reports)[0];
     int size = reports->size();
-    for (int i = 0; i < size; ++i) {
+    for (int i = 1; i < size; ++i) {
         AnomalyReport report = (*reports)[i];
-        if (!lastReport->description.compare(report.description)) {
+        if (lastReport->description.compare(report.description) != 0) {
             unionReports.push_back(pair<int, int>(lastReport->timeStep, (*reports)[i - 1].timeStep));
             lastReport = &(*reports)[i];
-        } else if (report.timeStep - lastReport->timeStep != 1) {
+        } else if (report.timeStep - (*reports)[i-1].timeStep != 1) {
             unionReports.push_back(pair<int, int>(lastReport->timeStep, (*reports)[i - 1].timeStep));
             lastReport = &(*reports)[i];
         }
     }
+    unionReports.push_back(pair<int, int>(lastReport->timeStep, (*reports)[reports->size() - 1].timeStep));
     return unionReports;
 }
 
