@@ -24,7 +24,7 @@ void UploadCommand::execute() {
     path = "test.csv";
     Command::dio->writeToFile(path);
     TimeSeries *testTs = new TimeSeries(path.c_str());
-    SimpleAnomalyDetector *simpleAnomalyDetector = new SimpleAnomalyDetector();
+    SimpleAnomalyDetector *simpleAnomalyDetector = new HybridAnomalyDetector();
     Command::info->detector = simpleAnomalyDetector;
     simpleAnomalyDetector->learnNormal(trainTs);
     Command::info->ts = testTs;
@@ -50,6 +50,7 @@ void AlgorithmSettings::execute() {
     Command::dio->write("The current correlation threshold is ");
     Command::dio->write(this->info->detector->getCorThreshold());
     Command::dio->write("\n");
+    Command::dio->write("Type a new threshold\n");
     string inputThrString = Command::dio->read();
     float inputThr = stof(inputThrString);
     while (true) {
@@ -81,7 +82,7 @@ string DetectAnomalies::getDes() {
 void DetectAnomalies::execute() {
     vector<AnomalyReport> reports = Command::info->detector->detect(*Command::info->ts);
     Command::info->reports = new vector<AnomalyReport>(reports);
-    Command::dio->write("complete detection anomaly.\n");
+    Command::dio->write("anomaly detection complete.\n");
 }
 
 
@@ -120,11 +121,12 @@ vector<pair<int, int>> Analyze::updateAnomalies(int &P, int &N, std::ifstream &a
     vector<pair<int, int>> anomalies;
     if (anomaliesTxt.is_open()) {
         getline(anomaliesTxt, line);
-        int end = line.find(","); //index of comma
-        while (line != "done") {
+        int end; //index of comma
+        while (line.compare("") != 0) {
+            end = line.find(",");
             P++; // another row
             int x = stoi(line.substr(0, end)); // start time
-            int y = stoi(line.substr(end + 1, line.size())); // end time
+            int y = stoi(line.substr(end + 1, line.size() - (end + 1))); // end time
             N += (y - x + 1);
             anomalies.push_back(pair<int, int>(x, y));
             getline(anomaliesTxt, line);
@@ -202,15 +204,19 @@ void Analyze::execute() {
     updateFNorTN(FN, &anomalies, &unionAnomalies);
     float ftRate = TP/P;
     float fRate = FP/N;
-    Command::dio->write("True Positive Rate:");
-    Command::dio->write(ftRate);
-    Command::dio->write("\n");
-    Command::dio->write("False Positive Rate:");
-    Command::dio->write(fRate);
-    Command::dio->write("\n");
+    string s;
+    s.append("True Positive Rate: ").append(to_string(ftRate)).append("\n").append
+            ("False Positive Rate: ").append(to_string(fRate)).append("\n");
+    Command::dio->write(s);
+//    Command::dio->write("True Positive Rate: ");
+//    Command::dio->write(ftRate);
+//    Command::dio->write("\n");
+//    Command::dio->write("False Positive Rate:");
+//    Command::dio->write(fRate);
+//    Command::dio->write("\n");
 }
 
-int comp(AnomalyReport a,AnomalyReport b) {
+int AnomalyReportComp(AnomalyReport & a,AnomalyReport & b) {
     if ((long) a.description.compare(b.description) == 0) {
         return a.timeStep - b.timeStep;
     }
@@ -220,7 +226,7 @@ int comp(AnomalyReport a,AnomalyReport b) {
 vector<pair<int, int>> Analyze:: getUnionReports() {
     vector<AnomalyReport> *reports = Command::info->reports;
     vector<pair<int, int>> unionReports;
-    sort(reports->begin(), reports->end(), comp);
+    sort(reports->begin(), reports->end(), AnomalyReportComp);
     if (reports->empty())
         return unionReports;
     AnomalyReport *lastReport = &(*reports)[0];
