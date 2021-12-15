@@ -99,7 +99,7 @@ void Display::execute() {
     vector<AnomalyReport> reports = *Command::info->reports;
     for (AnomalyReport report: reports) {
         Command::dio->write(report.timeStep);
-        Command::dio->write("   ");
+        Command::dio->write("\t");
         Command::dio->write(report.description);
         Command::dio->write("\n");
     }
@@ -184,9 +184,10 @@ void  Analyze::updateFNorTN(int &P, vector<pair<int, int>> *vector1, vector<pair
 
 
 void Analyze::execute() {
-    Command::dio->write("Please upload your local anomalies CSV file.\n");
+    Command::dio->write("Please upload your local anomalies file.\n");
     string path = "anomalies.txt";
     Command::dio->writeToFile(path);
+    Command::dio->write("Upload complete.\n");
     std::ifstream anomaliesTxt;
     anomaliesTxt.open(path);
     //num of row=P , N = no detection
@@ -208,39 +209,29 @@ void Analyze::execute() {
     s.append("True Positive Rate: ").append(to_string(ftRate)).append("\n").append
             ("False Positive Rate: ").append(to_string(fRate)).append("\n");
     Command::dio->write(s);
-//    Command::dio->write("True Positive Rate: ");
-//    Command::dio->write(ftRate);
-//    Command::dio->write("\n");
-//    Command::dio->write("False Positive Rate:");
-//    Command::dio->write(fRate);
-//    Command::dio->write("\n");
-}
-
-int AnomalyReportComp(AnomalyReport & a,AnomalyReport & b) {
-    if ((long) a.description.compare(b.description) == 0) {
-        return a.timeStep - b.timeStep;
-    }
-    return (long) a.description.compare(b.description);
 }
 
 vector<pair<int, int>> Analyze:: getUnionReports() {
     vector<AnomalyReport> *reports = Command::info->reports;
     vector<pair<int, int>> unionReports;
-    sort(reports->begin(), reports->end(), AnomalyReportComp);
     if (reports->empty())
         return unionReports;
+    else if (reports->size() == 1) {
+        unionReports.push_back(pair<int, int>((*reports)[0].timeStep, (*reports)[0].timeStep));
+    }
     AnomalyReport *lastReport = &(*reports)[0];
     int size = reports->size();
-    for (int i = 0; i < size; ++i) {
+    for (int i = 1; i < size; ++i) {
         AnomalyReport report = (*reports)[i];
-        if (!lastReport->description.compare(report.description)) {
+        if (lastReport->description.compare(report.description) != 0) {
             unionReports.push_back(pair<int, int>(lastReport->timeStep, (*reports)[i - 1].timeStep));
             lastReport = &(*reports)[i];
-        } else if (report.timeStep - lastReport->timeStep != 1) {
+        } else if (report.timeStep - (*reports)[i-1].timeStep != 1) {
             unionReports.push_back(pair<int, int>(lastReport->timeStep, (*reports)[i - 1].timeStep));
             lastReport = &(*reports)[i];
         }
     }
+    unionReports.push_back(pair<int, int>(lastReport->timeStep, (*reports)[reports->size() - 1].timeStep));
     return unionReports;
 }
 
