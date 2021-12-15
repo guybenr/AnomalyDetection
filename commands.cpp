@@ -156,7 +156,10 @@ void  Analyze::updateFPandTP(int &FP, int &TP, vector<pair<int, int>> *anomalies
     for (pair<int, int> pCheck: *unionAnomalies) {
         bool flagTP = false;
         for (pair<int, int> pReal: *anomalies) {
-            if (pCheck.second >= pReal.first || pCheck.first >= pReal.second) {
+            if ((pReal.second >= pCheck.first && pReal.first <= pCheck.first) ||
+                (pCheck.second >= pReal.first && pCheck.second <= pReal.second) ||
+                (pCheck.first <= pReal.first && pCheck.second >= pReal.second) ||
+                (pReal.first <= pCheck.first && pReal.second >= pCheck.second)) {
                 TP += 1;
                 flagTP = true;
                 break;
@@ -203,12 +206,16 @@ void Analyze::execute() {
     updateFPandTP(FP, TP, &anomalies, &unionAnomalies);
     updateFNorTN(TN, &NoAnomalies, &unionAnomalies);
     updateFNorTN(FN, &anomalies, &unionAnomalies);
-    float ftRate = TP/P;
-    float fRate = FP/N;
+    float tRate = (float)TP/(float)P;
+    float fRate = (float)FP/(float)N;
+    tRate = roundOff((float)((int)(tRate*1000))/(float)1000 , 3);
+    fRate =roundOff((float)((int)(fRate*1000))/(float)1000 , 3);
     string s;
-    s.append("True Positive Rate: ").append(to_string(ftRate)).append("\n").append
-            ("False Positive Rate: ").append(to_string(fRate)).append("\n");
-    Command::dio->write(s);
+    Command::dio->write("True Positive Rate: ");
+    Command::dio->write(tRate);
+    Command::dio->write("\nFalse Positive Rate: ");
+    Command::dio->write(fRate);
+    Command::dio->write("\n");
 }
 
 vector<pair<int, int>> Analyze:: getUnionReports() {
