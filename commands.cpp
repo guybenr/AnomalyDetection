@@ -184,7 +184,7 @@ void  Analyze::updateFNorTN(int &P, vector<pair<int, int>> *vector1, vector<pair
 
 
 void Analyze::execute() {
-    Command::dio->write("Please upload your local anomalies CSV file.\n");
+    Command::dio->write("Please upload your local anomalies file.\n");
     string path = "anomalies.txt";
     Command::dio->writeToFile(path);
     std::ifstream anomaliesTxt;
