@@ -300,9 +300,7 @@ private:
         unionReports.push_back(pair<int, int>(lastReport->timeStep, (*reports)[reports->size() - 1].timeStep));
         return unionReports;
     }
-
 };
-
 
 class Exit:public Command {
 public:
