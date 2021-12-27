@@ -17,30 +17,25 @@
 
 
 Server::Server(int port)throw (const char*) {
-    sockaddr_in sockAddrIn;
-    in_addr inAddr;
-    inAddr.s_addr = INADDR_ANY;
-    sockAddrIn.sin_family = AF_INET;
-    sockAddrIn.sin_port = htons(port);
-    sockAddrIn.sin_addr = inAddr;
-    sockaddr *sockAddr = (struct sockaddr*)&sockAddrIn;
-    int sock=0,b=0,l=0;
-    socklen_t size = sizeof(sockAddr);
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
-        throw std::runtime_error("error socket");
+    this->server.sin_family = AF_INET;
+    this->server.sin_port = htons(port);
+    this->server.sin_addr.s_addr = INADDR_ANY;
+
+    int fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (fd < 0) {
+        throw std::runtime_error("socket failed");
     }
-    if ((b = bind(sock, sockAddr, size)) == 0) {
-        throw std::runtime_error("error bind");
+    if (bind(fd, (struct sockaddr*)&this->server, sizeof(server)) < 0) {
+        throw std::runtime_error("bind failed");
     }
-    if ((l = listen(sock, 5)) == 0) {
-        throw std::runtime_error("error listen");
+    if (listen(fd, this->clientLimit) < 0) {
+        throw std::runtime_error("listen failed");
     }
-    this->server = sockAddrIn;
-    this->fd = sock;
-    int new_socket = accept(sock, sockAddr, &this->client,  &size);
+    this->fd = fd;
 }
 
 void Server::start(ClientHandler& ch)throw(const char*){
+
 }
 
 void Server::stop(){
