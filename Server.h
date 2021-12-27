@@ -41,8 +41,11 @@ public:
 
 // implement on Server.cpp
 class Server {
+    int clientLimit = 5;
     thread* t; // the thread to run the start() method in
-
+    int fd;
+    sockaddr_in server;
+    sockaddr_in client;
     // you may add data members
 
 public:

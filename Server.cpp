@@ -35,7 +35,9 @@ Server::Server(int port)throw (const char*) {
     if ((l = listen(sock, 5)) == 0) {
         throw std::runtime_error("error listen");
     }
-    int new_socket = accept(sock, sockAddr, &size);
+    this->server = sockAddrIn;
+    this->fd = sock;
+    int new_socket = accept(sock, sockAddr, &this->client,  &size);
 }
 
 void Server::start(ClientHandler& ch)throw(const char*){
