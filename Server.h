@@ -13,6 +13,9 @@
 #include "commands.h"
 #include "CLI.h"
 
+#include <bits/sockaddr.h>
+#include <netinet/in.h>
+
 using namespace std;
 
 // edit your ClientHandler interface here:
