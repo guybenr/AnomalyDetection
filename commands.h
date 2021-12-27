@@ -42,6 +42,17 @@ public:
     // you may add additional methods here
 };
 
+class SocketIO: public DefaultIO{
+private:
+    int socketID;
+public:
+    SocketIO(int socketID) : socketID(socketID) {}
+    virtual string read() override;
+    virtual void write(string text) override;
+    virtual void read(float *f) override;
+    virtual void write(float f) override;
+};
+
 // you may add here helper classes
 
 struct infoCommand {

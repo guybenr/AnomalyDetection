@@ -9,6 +9,10 @@
 #define SERVER_H_
 
 
+#include <thread>
+#include "commands.h"
+#include "CLI.h"
+
 using namespace std;
 
 // edit your ClientHandler interface here:
@@ -25,7 +29,9 @@ public:
 class AnomalyDetectionHandler:public ClientHandler{
 public:
     virtual void handle(int clientID){
-
+        DefaultIO* dio = new SocketIO(clientID);
+        CLI cli(dio);
+        cli.start();
     }
 };
 
