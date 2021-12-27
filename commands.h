@@ -7,6 +7,7 @@
 #include <vector>
 #include "HybridAnomalyDetector.h"
 #include <algorithm>
+#include <sys/socket.h>
 
 using namespace std;
 
@@ -47,10 +48,24 @@ private:
     int socketID;
 public:
     SocketIO(int socketID) : socketID(socketID) {}
-    virtual string read() override;
-    virtual void write(string text) override;
-    virtual void read(float *f) override;
-    virtual void write(float f) override;
+    virtual string read() override {
+        char buf = '1';
+        string line = "";
+        while(buf != '\n') {
+            int bytes = recv(this->socketID, &buf, 1, 0);
+            line += buf;
+        }
+        return line;
+    }
+    virtual void write(string text) override {
+        send(this->socketID,text.c_str(),text.size(),0);
+    }
+    virtual void read(float *f) override {
+        int bytes = recv(this->socketID, f, 8, 0);
+    }
+    virtual void write(float f) override {
+        send(this->socketID, &f, sizeof(f), 0);
+    }
 };
 
 // you may add here helper classes
