@@ -44,8 +44,8 @@ void Server::start(ClientHandler& ch)throw(const char*){
                 continue;
             ch.handle(clientFd);
             close(clientFd);
-            close(fd);
         }
+        close(fd);
     });
 }
 
