@@ -9,9 +9,10 @@ TimeSeries::TimeSeries(const char* CSVfileName) {
     fstream f(CSVfileName);
     string line;
     getline(f, line);
-    addFeature(line); // adding features
+    addFeature(line);// adding features
     while (true) {
         string values;
+        getline(f, values);
         getline(f, values);
         if (values.empty()) {
             break;
