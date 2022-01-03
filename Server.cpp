@@ -35,15 +35,23 @@ Server::Server(int port)throw (const char*) {
     this->fd = fd;
 }
 
+void alarmHandler(int sig) {
+    return;
+}
+
 void Server::start(ClientHandler& ch)throw(const char*){
     t = new thread([&ch, this](){
+//        signal(SIGALRM, alarmHandler);
         while(!forceStop) {
             socklen_t clientSize = sizeof(this->client);
+//            alarm(3);
             int clientFd = accept(this->fd, (struct sockaddr *) &client, &clientSize);
-            if (clientFd < 0)
-                continue;
-            ch.handle(clientFd);
-            close(clientFd);
+            if (clientFd > 0) {
+                ch.handle(clientFd);
+                close(clientFd);
+            } else
+                throw "Connection Failed";
+//            alarm(0);
         }
         close(fd);
     });

@@ -61,12 +61,16 @@ public:
         send(this->socketID,text.c_str(),text.size(),0);
     }
     virtual void read(float *f) override {
-        char buf[8];
-        int bytes = recv(this->socketID, buf, 8, 0);
-        *f = (float)(buf[0] - '0');
+        char buf = '1';
+        string input = "";
+        while (buf != '\n') {
+            int bytes = recv(this->socketID, &buf, 1, 0);
+            input += buf;
+        }
+        *f = stof(input.substr(0, input.size() - 1));
     }
     virtual void write(float f) override {
-        send(this->socketID, &f, sizeof(f), 0);
+        send(this->socketID, to_string(f).c_str(), sizeof(f), 0);
     }
 };
 
