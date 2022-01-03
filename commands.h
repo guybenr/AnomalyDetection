@@ -261,6 +261,7 @@ private:
                 N += (y - x + 1);
                 anomalies.push_back(pair<int, int>(x, y));
                 getline(anomaliesTxt, line);
+                getline(anomaliesTxt, line);
             }
             N = Command::info->ts->getData()[0].second.size() - N;
         }
