@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <time.h>
 #include "Server.h"
+#include "signal.h"
 
 
 Server::Server(int port)throw (const char*) {
@@ -36,18 +37,22 @@ Server::Server(int port)throw (const char*) {
 
 void Server::start(ClientHandler& ch)throw(const char*){
     t = new thread([&ch, this](){
-        socklen_t clientSize = sizeof (this->client);
-        int clientFd =  accept(this->fd, (struct sockaddr*)&client, &clientSize);
-        if (clientFd < 0)
-            throw "accept failure";
-        ch.handle(clientFd);
-        close(clientFd);
-        close(fd);
+        while(!forceStop) {
+            socklen_t clientSize = sizeof(this->client);
+            int clientFd = accept(this->fd, (struct sockaddr *) &client, &clientSize);
+            if (clientFd < 0)
+                continue;
+            ch.handle(clientFd);
+            close(clientFd);
+            close(fd);
+        }
     });
 }
 
 void Server::stop(){
+    this->forceStop = true;
     t->join(); // do not delete this!
+    delete t;
 }
 
 Server::~Server() {

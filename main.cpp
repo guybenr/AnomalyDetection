@@ -70,7 +70,10 @@ int initClient(int port)throw (const char*){
 
     serv_addr.sin_port = htons(port);
     if (connect(serverFD,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0)
+    {
         throw "connection problem";
+    }
+
 
     return serverFD;
 }

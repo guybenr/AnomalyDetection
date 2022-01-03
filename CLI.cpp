@@ -42,4 +42,6 @@ void CLI::start(){
 
 
 CLI::~CLI() {
+    this->commands.clear();
+    delete this->dio;
 }

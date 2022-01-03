@@ -21,7 +21,7 @@ public:
         std::ofstream file;
         file.open(path);
         string row = this->read();
-        while (row != "done") {
+        while (row != "done\n") {
             file << row << "\n";
             row = this->read();
         }
@@ -32,7 +32,7 @@ public:
         file.open(path);
         string row;
         getline(file, row);
-        while (row != "done") {
+        while (row != "done\n") {
             this->write(row);
             getline(file, row);
         }
@@ -49,10 +49,10 @@ private:
 public:
     SocketIO(int socketID) : socketID(socketID) {}
     virtual string read() override {
-        char buf = '1';
+        char buf;
         string line = "";
         while(buf != '\n') {
-            int bytes = recv(this->socketID, &buf, 1, 0);
+            long bytes = recv(this->socketID, &buf, 1, 0);
             line += buf;
         }
         return line;
@@ -61,7 +61,9 @@ public:
         send(this->socketID,text.c_str(),text.size(),0);
     }
     virtual void read(float *f) override {
-        int bytes = recv(this->socketID, f, 8, 0);
+        char buf[8];
+        int bytes = recv(this->socketID, buf, 8, 0);
+        *f = (float)(buf[0] - '0');
     }
     virtual void write(float f) override {
         send(this->socketID, &f, sizeof(f), 0);

@@ -33,14 +33,16 @@ class AnomalyDetectionHandler:public ClientHandler{
 public:
     virtual void handle(int clientID){
         DefaultIO* dio = new SocketIO(clientID);
-        CLI cli(dio);
-        cli.start();
+        CLI *cli = new CLI(dio);
+        cli->start();
+        delete cli;
     }
 };
 
 
 // implement on Server.cpp
 class Server {
+    bool forceStop = false;
     int clientLimit = 5;
     thread* t; // the thread to run the start() method in
     int fd;
