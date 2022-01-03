@@ -70,7 +70,11 @@ public:
         *f = stof(input.substr(0, input.size() - 1));
     }
     virtual void write(float f) override {
-        send(this->socketID, to_string(f).c_str(), sizeof(f), 0);
+        string fStr = to_string(f);
+        fStr.erase(fStr.find_last_not_of('0') + 1, std::string::npos);
+        if (fStr[fStr.size() - 1] == '.')
+            fStr = fStr.substr(0, fStr.size() - 2);
+        send(this->socketID, fStr.c_str(), fStr.size(), 0);
     }
 };
 
