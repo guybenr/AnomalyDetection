@@ -16,6 +16,7 @@
 #include "Server.h"
 #include "signal.h"
 
+bool flag = true;
 
 Server::Server(int port)throw (const char*) {
     this->server.sin_family = AF_INET;
@@ -35,23 +36,24 @@ Server::Server(int port)throw (const char*) {
     this->fd = fd;
 }
 
-void alarmHandler(int sig) {
-    return;
-}
-
 void Server::start(ClientHandler& ch)throw(const char*){
     t = new thread([&ch, this](){
-//        signal(SIGALRM, alarmHandler);
         while(!forceStop) {
             socklen_t clientSize = sizeof(this->client);
-//            alarm(3);
+            timeval timeout = {0, 200};
+            fd_set fds;
+            FD_ZERO(&fds);
+            FD_SET(this->fd, &fds);
+            select(this->fd + 1, &fds, NULL, NULL, &timeout);
+            if(!FD_ISSET(this->fd, &fds)) {
+                continue;
+            }
             int clientFd = accept(this->fd, (struct sockaddr *) &client, &clientSize);
             if (clientFd > 0) {
                 ch.handle(clientFd);
                 close(clientFd);
             } else
                 throw "Connection Failed";
-//            alarm(0);
         }
         close(fd);
     });
@@ -63,6 +65,5 @@ void Server::stop(){
     delete t;
 }
 
-Server::~Server() {
-}
+Server::~Server() = default;
 
